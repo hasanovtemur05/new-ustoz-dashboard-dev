@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(\"src\\pages\\Survey\\index.ts\")",
+      "Bash(npx tsc:*)",
+      "Bash(npm run build:*)",
+      "Bash(timeout 120 echo:*)",
+      "Bash(powershell:*)",
+      "Bash(findstr:*)",
+      "Bash(Select-String \"Fixed:\")",
+      "Bash(Select-Object -First 20)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
