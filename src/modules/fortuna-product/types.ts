@@ -3,8 +3,6 @@ export enum FortunaProductType {
   PRODUCT = 'PRODUCT',
   PROMOCODE = 'PROMOCODE',
   EMPTY = 'EMPTY',
-  AMATEUR_CERTIFICATE = 'AMATEUR_CERTIFICATE',
-  PROGRESSIVE_CERTIFICATE = 'PROGRESSIVE_CERTIFICATE'
 }
 
 export interface FortunaProduct {

@@ -18,12 +18,10 @@ export default function createBreadcrumbs() {
           path: 'courses',
           element: <Breadcrumbs text="Kurslar" />,
           children: [
-            // Parent course page
             {
               path: ':courseId',
               element: <Breadcrumbs text="Bo'limlar" />,
               children: [
-                // Modules and lessons
                 {
                   path: ':moduleId',
                   element: <Breadcrumbs text="Darslar" />,
@@ -36,11 +34,6 @@ export default function createBreadcrumbs() {
                 },
               ],
             },
-            // ✅ Izohlar alohida, sibling route sifatida
-            {
-              path: ':courseId/comments',
-              element: <Breadcrumbs text="Izohlar" />,
-            },
           ],
         },
         {
@@ -48,31 +41,31 @@ export default function createBreadcrumbs() {
           element: <Breadcrumbs text="Grandmasterlar" />,
         },
         {
-          path: 'news',
+          path: '/news',
           element: <Breadcrumbs text="Yangiliklar" />,
         },
         {
-          path: 'books',
+          path: '/books',
           element: <Breadcrumbs text="Kitoblar" />,
         },
         {
-          path: 'afisha',
+          path: '/afisha',
           element: <Breadcrumbs text="Afisha" />,
         },
         {
-          path: 'review-games',
+          path: '/review-games',
           element: <Breadcrumbs text="Tahlillar" />,
         },
         {
-          path: 'live-streams',
+          path: '/live-streams',
           element: <Breadcrumbs text="Jonli efir" />,
         },
         {
-          path: 'puzzles',
+          path: '/puzzles',
           element: <Breadcrumbs text="Boshqotirmalar" />,
         },
         {
-          path: 'notifications',
+          path: '/notifications',
           element: <Breadcrumbs text="Bildirishnomalar" />,
         },
       ],
@@ -80,7 +73,6 @@ export default function createBreadcrumbs() {
   ];
 }
 
-// Breadcrumb component
 function Breadcrumbs({ text }: { text: string }) {
   const location = useLocation();
   const resolvedLocation = useResolvedPath('');
@@ -108,3 +100,14 @@ function Breadcrumbs({ text }: { text: string }) {
     </div>
   );
 }
+
+// function DynamicBreadcrumbs() {
+//   const params = useParams();
+//   const { organizationId } = params;
+//   // fetch your data any way you want
+//   // here I'm using react-query
+//   const { data } = useQuery([{ id: organizationId }], api.fetchOrganization);
+//   const organization = data || { name: '' };
+//   const text = organization.name || '-';
+//   return <Breadcrumbs text={text} />;
+// }

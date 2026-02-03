@@ -9,20 +9,14 @@ import { createVacancyColumns } from './Columns';
 import { IPromocode } from 'modules/promocode/types';
 import { usePromocodesList } from 'modules/promocode/hooks/useList';
 import { useDeletePromocode } from 'modules/promocode/hooks/useDelete';
-import { Pagination } from 'components/Pagination';
+
 
 const PromocodePage = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isSheetOpen, setSheetOpen] = useState(false);
   const [course, setCourse] = useState<IPromocode>();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
 
-  const { data: coursesList, isLoading, paginationInfo } = usePromocodesList({ 
-    currentPage,
-    search: searchQuery 
-  });
-  
+  const { data: coursesList, isLoading } = usePromocodesList();
   const { triggerVacancyDelete } = useDeletePromocode(course?.id!);
 
   const getRowData = (course: IPromocode) => {
@@ -35,35 +29,17 @@ const PromocodePage = () => {
     setSheetOpen,
   });
 
-  const handleSearchChange = (value: string) => {
-    setSearchQuery(value);
-    setCurrentPage(1); // Reset to first page when searching
-  };
-
   return (
     <div>
       <TableActions
         sheetTriggerTitle="Promocode qo'shish"
         sheetTitle="Yangi Promocode qo'shish."
         TableForm={CourseForm}
-        searchValue={searchQuery}
-        setSearchValue={handleSearchChange}
       />
-
       {isLoading ? (
         <Loader />
       ) : (
-        <>
-          <DataTable columns={columns} data={coursesList} />
-          {paginationInfo && (
-            <Pagination
-              className="justify-end mt-3"
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              paginationInfo={paginationInfo}
-            />
-          )}
-        </>
+        <DataTable columns={columns} data={coursesList}  />
       )}
 
       <Sheet
@@ -73,7 +49,6 @@ const PromocodePage = () => {
       >
         <CourseForm promocode={course} setSheetOpen={setSheetOpen} />
       </Sheet>
-      
       <AlertDialog
         alertTitle="Ishonchingiz komilmi?"
         alertDescription="Bu harakat orqali siz ma'lumotni o'chirib tashlaysiz."

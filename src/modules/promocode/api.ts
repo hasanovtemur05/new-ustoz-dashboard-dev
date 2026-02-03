@@ -1,27 +1,9 @@
 import http from "services/api";
 import { IPromocodeEditBody, IPromocodeInput } from "./types";
 
-export const GetPromocodesList = async ({
-  pageNumber,
-  pageSize,
-  isActive,
-  search,
-}: {
-  pageNumber: number;
-  pageSize: number;
-  isActive?: boolean;
-  search?: string;
-}) => {
-  return await http.get('/promocode', {
-    params: {
-      pageNumber,
-      pageSize,
-      isActive,
-      search,
-    },
-  });
+export const GetPromocodesList = async () => {
+  return await http.get(`/promocode/`);
 };
-
 
 export const CreatePromocode = async (values: IPromocodeInput) => {
   return await http.post(`/promocode/`, values);

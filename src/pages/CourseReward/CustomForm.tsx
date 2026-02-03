@@ -21,9 +21,6 @@ const typeData = [
   { type: LessonRewardType.PRODUCT, name: 'Mahsulot' },
   { type: LessonRewardType.PROMOCODE, name: 'Promocode' },
   { type: LessonRewardType.FILE, name: 'File' },
-  { type: LessonRewardType.AMATEUR_CERTIFICATE, name: 'Havaskor Sertifikat' },
-  { type: LessonRewardType.PROGRESSIVE_CERTIFICATE, name: 'Yuksaluvchi Sertifikat' },
-
 ];
 
 export default function CustomForm({ product, setSheetOpen }: IProps) {

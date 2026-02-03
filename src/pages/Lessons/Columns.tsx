@@ -27,7 +27,7 @@ export const createLessonColumns = ({ getRowData, setSheetOpen, setDialogOpen }:
         <a
           href={
             row.original.linkType === LessonLinkType.VIDEO
-              ? `${row.getValue('link')}`
+              ? `https://iframe.mediadelivery.net/play/504451/${row.getValue('link')}`
               : row.getValue('link')
           }
           className="hover:underline text-blue-500"

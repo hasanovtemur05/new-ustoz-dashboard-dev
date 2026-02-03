@@ -17,15 +17,14 @@ import MediaUploadField from 'components/fields/VideoUploder';
 import useFileUploader from 'hooks/useFileUploader';
 import { isYouTubeUrl } from 'utils/common';
 
-
 const lessonSchema = z.object({
-  title: z.string().min(3),
-  description: z.string().min(20),
-  link: z.union([z.string(), z.instanceof(File)]).optional(),
+  title: z.string().min(3, "Dars nomi kamida 3 ta belgidan iborat bo'lishi kerak"),
+  description: z.string().min(20, "Dars tavsifi kamida 20 ta belgidan iborat bo'lishi kerak"),
+  link: z.union([z.string(), z.instanceof(File)]),
   duration: z.number().optional(),
   _duration: z.date().optional(),
   isSoon: z.boolean().optional(),
-  linkType: z.nativeEnum(LessonLinkType),
+  linkType: z.nativeEnum(LessonLinkType, { message: 'Iltimos video turini tanlang' }),
   isActive: z.boolean().optional(),
   orderId: z.number().optional(),
   videoId: z.string().optional(),
@@ -71,44 +70,33 @@ export default function LessonForm({ lesson, lastDataOrder: lastLessonOrder, set
     value.setHours(hours, minutes, seconds);
     return value;
   }, [lesson?.duration]);
-const form = useForm<lessonFormSchema>({
-  resolver: zodResolver(lessonSchema),
-  defaultValues: lesson
-    ? {
-        title: lesson.title,
-        description: lesson.description,
 
-        linkType: lesson.linkType,
-
-        // ✅ AGAR YOUTUBE BO‘LSA
-        link: lesson.linkType === LessonLinkType.YOU_TUBE
-          ? lesson.link
-          : '',
-
-        // ✅ AGAR VIDEO BO‘LSA
-        videoId: lesson.linkType === LessonLinkType.VIDEO
-          ? lesson.link
-          : '',
-
-        duration: lesson.duration,
-        _duration,
-        isSoon: lesson.isSoon ?? false,
-        isActive: lesson.isActive ?? true,
-        orderId: lesson.orderId ?? 0,
-      }
-    : {
-        title: '',
-        description: '',
-        link: '',
-        videoId: '',
-        duration: 0,
-        linkType: LessonLinkType.YOU_TUBE,
-        _duration: initialDate,
-        isSoon: false,
-        isActive: true,
-        orderId: lastLessonOrder ? lastLessonOrder + 1 : 1,
-      },
-});
+  const form = useForm<lessonFormSchema>({
+    resolver: zodResolver(lessonSchema),
+    defaultValues: lesson
+      ? {
+          title: lesson.title,
+          description: lesson.description,
+          link: isYouTubeUrl(lesson.link) ? lesson.link : `https://iframe.mediadelivery.net/embed/504451/${lesson.link}`,
+          duration: lesson.duration,
+          linkType: lesson.linkType,
+          _duration,
+          isSoon: lesson.isSoon ?? false,
+          isActive: lesson.isActive ?? true,
+          orderId: lesson.orderId || 0,
+        }
+      : {
+          title: '',
+          description: '',
+          link: '',
+          duration: 0,
+          linkType: LessonLinkType.YOU_TUBE,
+          _duration: initialDate,
+          isSoon: false,
+          isActive: true,
+          orderId: lastLessonOrder ? lastLessonOrder + 1 : 1,
+        },
+  });
 
   const type = form.watch('linkType');
 
@@ -122,52 +110,39 @@ const form = useForm<lessonFormSchema>({
     }
   }, [type, form, lesson]);
 
-async function onSubmit(formValues: lessonFormSchema) {
-  try {
-    setIsLoading(true);
+  async function onSubmit(formValues: lessonFormSchema) {
+    try {
+      setIsLoading(true);
 
-    const duration = Math.trunc(
-      formValues._duration
-        ? (formValues._duration.getTime() - initialDate.getTime()) / 1000
-        : 0
-    );
+      const duration = Math.trunc(formValues._duration ? (formValues._duration.getTime() - new Date(initialDate).getTime()) / 1000 : 0);
 
-    let payloadData: any = {
-      ...formValues,
-      duration,
-      moduleId: moduleId as string,
-      isActive,
-      isSoon,
-    };
+      const formData = formValues.videoId ? { ...formValues, link: formValues.videoId } : { ...formValues };
+      formData.duration = duration;
+      delete formData._duration;
 
-    delete payloadData._duration;
+      const values =
+        formData.linkType === LessonLinkType.VIDEO && formData.link instanceof File && !formData.videoId
+          ? await uploadFile<LessonInput>(formData, 'link')
+          : formData;
 
-    // ✅ VIDEO
-    if (formValues.linkType === LessonLinkType.VIDEO) {
-      payloadData.link = formValues.videoId;
+      const payload = {
+        ...values,
+        moduleId: moduleId as string,
+        isActive: isActive,
+        isSoon: isSoon,
+      };
 
-      // agar yangi file yuklanayotgan bo‘lsa
-      if (formValues.link instanceof File) {
-        payloadData = await uploadFile(payloadData, 'link');
+      if (lesson) {
+        triggerLessonEdit(payload);
+      } else {
+        triggerLessonCreate(payload);
       }
+    } catch (error) {
+      console.error('Form submission error:', error);
+    } finally {
+      setIsLoading(false);
     }
-
-    // ✅ YOUTUBE
-    if (formValues.linkType === LessonLinkType.YOU_TUBE) {
-      payloadData.videoId = undefined;
-    }
-
-    lesson ? triggerLessonEdit(payloadData) : triggerLessonCreate(payloadData);
-
-  } catch (e) {
-    console.error(e);
-  } finally {
-    setIsLoading(false);
   }
-}
-
-
-  
 
   return (
     <Form {...form}>

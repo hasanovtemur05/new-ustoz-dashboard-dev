@@ -3,25 +3,16 @@
 import { type ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "components/ui/table"
-import type { CSSProperties, Dispatch, SetStateAction } from "react"
+import type { CSSProperties } from "react"
 import { useNavigate } from "react-router-dom"
 import { cn } from "utils/styleUtils"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-
-  // navigation
   navigateTable?: boolean
   queryParams?: Record<string, string>
   customNavigationUrl?: (rowData: TData) => string
-
-  // ✅ pagination
-  pageNumber?: number
-  pageSize?: number
-  totalPages?: number
-  setPageNumber?: Dispatch<SetStateAction<number>>
-  setPageSize?: Dispatch<SetStateAction<number>>
 }
 
 export function DataTable<TData, TValue>({

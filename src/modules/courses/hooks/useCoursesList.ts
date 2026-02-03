@@ -4,9 +4,6 @@ import { get } from 'lodash';
 import { getCoursesList } from '../adapters';
 import { GetCoursesList } from '../api';
 
-
-
-
 export const useCoursesList = ({currentPage , isEnabled = true , }: {currentPage?: number , isEnabled?: boolean } = {}) => {
   const initialData = {
     data: getCoursesList(),
@@ -27,7 +24,3 @@ export const useCoursesList = ({currentPage , isEnabled = true , }: {currentPage
     ...args,
   };
 };
-
-
-
-

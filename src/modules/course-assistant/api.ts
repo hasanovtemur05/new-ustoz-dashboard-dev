@@ -5,7 +5,6 @@ export const GetDatasList = async (currentPage: number) => {
   return await http.get(`/course-assistants?pageSize=10`, { params: { pageNumber: currentPage } });
 };
 
-
 export const CreateData = async (values: ICourseAssistantInput) => {
   return await http.post(`/course-assistants`, values);
 };

@@ -23,6 +23,17 @@ export const createCourseColumns = ({ getRowData, setSheetOpen, setDialogOpen, c
     accessorKey: 'title',
     header: 'Kurs nomi',
   },
+  // {
+  //   accessorKey: 'description',
+  //   header: 'Davomiyligi',
+  //   cell: ({ row }) => {
+  //     const rawHtml: string = row.getValue('description');
+  //     const plainText = stripHtml(rawHtml);
+  //     const truncatedText = truncateText(plainText, 70);
+
+  //     return <div title={plainText}>{truncatedText}</div>;
+  //   },
+  // },
   {
     accessorKey: 'isActive',
     header: 'Status',
@@ -30,7 +41,7 @@ export const createCourseColumns = ({ getRowData, setSheetOpen, setDialogOpen, c
       const isActive: boolean = row.getValue('isActive') || false;
       return (
         <>
-          <CustomSwitch state={isActive} labelText={isActive ? "Ko'rinadigan" : "Ko'rinmaydigan "} />
+          <CustomSwitch state={isActive} labelText={isActive ? "Ko'rinadigan" : "Ko'rinmaydigan "}     />
         </>
       );
     },
@@ -40,7 +51,6 @@ export const createCourseColumns = ({ getRowData, setSheetOpen, setDialogOpen, c
     header: 'Narx turi',
     cell: ({ row }) => {
       const pricingType = row.getValue('pricingType') as string;
-
       return (
         <Badge variant={pricingType === 'PAID' ? 'default' : 'secondary'}>
           {pricingType === 'PAID' ? 'PRO' : pricingType === 'TOURISM' ? 'Turizm' : 'BEPUL'}
@@ -66,27 +76,6 @@ export const createCourseColumns = ({ getRowData, setSheetOpen, setDialogOpen, c
       return pricingType === 'FREE' ? planLessonCount : '-';
     },
   },
-  {
-    accessorKey: 'ratingCount',
-    header: 'Izohlar',
-    cell: ({ row }) => {
-      const count = row.getValue('ratingCount') as number;
-      const id = row.original.id;
-
-      return (
-        <Link
-          to={`/courses/${id}/comments`}
-          onClick={(e) => e.stopPropagation()}
-          className="inline-flex items-center px-3 py-1 rounded-md bg-[#0F172A] text-white text-sm font-medium  transition-colors"
-        >
-          {count ?? 0} ta 
-        </Link>
-      );
-    },
-  },
-
-
-
   {
     accessorKey: 'price',
     header: 'Narxi',
