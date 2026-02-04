@@ -3,7 +3,7 @@ export const getData = (item?: StoryV2Type) => {
   return {
     id: item?.id ?? '',
     title: item?.title ?? '',
-    thumbnailUrl: item?.thumbnailUrl ?? '',
+    thumbnail: item?.thumbnail ?? '',
     media: item?.media ?? [],
   };
 };

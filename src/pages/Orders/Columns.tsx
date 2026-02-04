@@ -18,7 +18,7 @@ export const createDataColumns = ({ getRowData, setSheetOpen, setDialogOpen, cur
     header: 'T/R',
     cell: ({ row }) => row.index + 1 + (currentPage - 1) * 10,
   },
-  {
+   {
     accessorKey: 'product',
     header: 'Maxsulot',
     cell: ({ row }) => {
@@ -43,13 +43,19 @@ export const createDataColumns = ({ getRowData, setSheetOpen, setDialogOpen, cur
     header: 'User',
     cell: ({ row }) => {
       const phone = row.original?.user?.phone;
+      const email = row.original?.user?.email;
       const handleClick = () => {
-        navigator.clipboard.writeText(phone || '');
+        const textToCopy = phone || email || '';
+        navigator.clipboard.writeText(textToCopy)
+          .then(() => console.log('Copied to clipboard:', textToCopy))
+          .catch(() => console.error('Clipboard error'));
       };
+
+
       return (
         <>
           <div className=" p-1 rounded transition-colors flex items-center gap-2" title="Click to copy">
-            {phone}
+            {phone} {email}
             <CopyIcon onClick={handleClick} className="cursor-pointer" />
           </div>
         </>
@@ -82,6 +88,6 @@ export const createDataColumns = ({ getRowData, setSheetOpen, setDialogOpen, cur
     accessorKey: 'id',
     header: () => <span className="sr-only">Actions</span>,
     size: 50,
-    cell: ({ row }) => <DataTableRowActions row={row} getRowData={getRowData} setDialogOpen={setDialogOpen} setSheetOpen={setSheetOpen} />,
+    cell: ({ row }) => <DataTableRowActions row={row} getRowData={getRowData} setDialogOpen={setDialogOpen} setSheetOpen={() => { }} />,
   },
 ];

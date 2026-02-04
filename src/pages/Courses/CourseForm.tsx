@@ -293,7 +293,6 @@ export default function CourseForm({ course, setSheetOpen }: IProps) {
     setTeachersData(newArr);
   }, [coursesList]);
 
-  console.log(form.formState.errors);
 
   return (
     <Form {...form}>

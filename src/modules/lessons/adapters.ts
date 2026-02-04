@@ -1,10 +1,12 @@
 import { Lesson, LessonLinkType } from './types';
+
 export const getLesson = (item?: Lesson) => {
   return {
     id: item?.id ?? '',
     title: item?.title ?? '',
     description: item?.description ?? '',
     link: item?.link ?? '',
+    thumbnail: item?.thumbnail ?? '', // ✅ QO'SHILDI!
     moduleId: item?.moduleId ?? '',
     duration: item?.duration ?? 0,
     linkType: item?.linkType ?? LessonLinkType.YOU_TUBE,

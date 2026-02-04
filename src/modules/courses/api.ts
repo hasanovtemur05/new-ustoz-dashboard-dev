@@ -16,3 +16,4 @@ export const EditCourse = async ({ values, id }: CourseEditBody) => {
 export const DeleteCourse = async (id: string) => {
   return await httpV2.delete(`/course/${id}`);
 };
+

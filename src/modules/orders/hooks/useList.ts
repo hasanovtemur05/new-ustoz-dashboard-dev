@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { get } from 'lodash';
 
 import { getDatasList } from '../adapters';
-import { GetDatasList } from '../api';
+import { GetDatasList, SearchCourseId, SearchUserId } from '../api';
 
 interface OrderFilters {
   type: string;
@@ -35,4 +35,30 @@ export const useOredersList = (currentPage: number, filters: OrderFilters) => {
     ...args,
     // pagenationInfo
   };
+};
+
+
+export const useSearchCoursesId = (search: string) => {
+  return useQuery({
+    queryKey: ['search-courses', search],
+    queryFn: async () => {
+      const res = await SearchCourseId(search);
+      return get(res, 'data.data') || [];
+    },
+    enabled: Boolean(search?.trim()),
+    staleTime: 1000 * 60 * 5,
+  });
+};
+
+
+export const useSearchUserId = (search: string) => {
+  return useQuery({
+    queryKey: ['search-users', search],
+    queryFn: async () => {
+      const res = await SearchUserId(search);
+      return get(res, 'data.data') || [];
+    },
+    enabled: Boolean(search?.trim()),
+    staleTime: 1000 * 60 * 5,
+  });
 };

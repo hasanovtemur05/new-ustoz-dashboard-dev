@@ -1,4 +1,5 @@
 export interface Lesson {
+  thumbnail?: string;
   id: string;
   title: string;
   description: string;
@@ -9,6 +10,7 @@ export interface Lesson {
   isSoon: boolean;
   isActive: boolean;
   orderId: number;
+
 }
 
 export interface LessonInput {
@@ -19,6 +21,7 @@ export interface LessonInput {
   duration?: number;
   isSoon: boolean;
   isActive: boolean;
+  thumbnail?: string;
 }
 
 export interface LessonEditBody {

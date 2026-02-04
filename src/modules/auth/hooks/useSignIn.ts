@@ -47,7 +47,6 @@ export const useSignIn = () => {
     },
     onError: (error: any) => {
       localStorage.clear();
-      console.log(error.message);
 
       toast({
         variant: 'destructive',

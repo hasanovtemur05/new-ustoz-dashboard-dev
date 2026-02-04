@@ -30,7 +30,6 @@ const CourseAssistantPage = () => {
     setSheetOpen,
   });
 
-  console.log(couseAssitants, 'courseAsistants');
 
   return (
     <div>

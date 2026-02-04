@@ -4,6 +4,8 @@ export enum LessonRewardType {
   PROMOCODE = 'PROMOCODE',
   FILE = 'FILE',
   EMPTY = 'EMPTY',
+  AMATEUR_CERTIFICATE = 'AMATEUR_CERTIFICATE',
+  PROGRESSIVE_CERTIFICATE = 'PROGRESSIVE_CERTIFICATE'
 }
 
 export interface LessonReward {

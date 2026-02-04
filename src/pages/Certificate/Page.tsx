@@ -24,7 +24,6 @@ const Certificate = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const { data: notificationsList, isLoading, paginationInfo } = useCertificatesList(currentPage)
   const { data: recomData, isLoading: isRecomLoading, paginationInfo: recomPaginationInfo } = useRecomList(currentPage)
-  console.log(recomData, "recom data")
 
   const rowType = data && "degree" in data ? "certificate" : "recommendation"
   const { triggerDelete } = useDeleteRow(data?.id || "", rowType)

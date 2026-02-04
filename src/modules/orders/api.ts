@@ -1,4 +1,4 @@
-import http from 'services/api';
+import http, { httpV2 } from 'services/api';
 import { IOrderInput } from './types';
 
 interface OrderFilters {
@@ -35,3 +35,15 @@ export const DeleteData = async (id: string) => {
 export const CancelData = async (id: string) => {
   return await http.delete(`/order/cancel/${id}`);
 };
+
+export const SearchUserId = async (search: string) => {
+  return await http.get(`/users?search=${search}`);
+};
+
+export const SearchCourseId = async (search: string) => {
+  return await httpV2.get(`/course?search=${search}`);
+}
+
+export const CreateEnrollmet = async (courseId: string, userId: string) => {
+  return await http.post(`/enrollment`, { courseId, userId });
+}

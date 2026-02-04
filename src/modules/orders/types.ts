@@ -15,6 +15,7 @@ interface User {
   firstname: string;
   lastname: string;
   phone: string;
+  email: string;
 }
 interface IProduct {
   title: string;
@@ -35,4 +36,24 @@ export interface IOrder {
 export interface IOrderInput {
   id: string;
   status: DonationStatus;
+}
+
+export interface OrdersCreateType {
+  userId: string;
+  productId: string;
+}
+
+export interface IOrdersFilter {
+  id: string,
+  userId: string,
+  courseId: string,
+  amount: number,
+  createdAt: string,
+  user: {},
+  course: {}
+}
+
+export interface OrdersFormType {
+  userId: string;
+  courseId: string;
 }

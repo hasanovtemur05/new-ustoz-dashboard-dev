@@ -41,6 +41,7 @@ interface IProps {
 
 export default function NotificationForm({ notification, setSheetOpen }: IProps) {
   const [coursesData, setCoursesData] = useState<SelectType[]>([]);
+  
 
   const { uploadFile } = useFileUploader();
   const { triggerNotificationCreate, isPending: isNotificationCreatePending } = useCreateNotification({ setSheetOpen });

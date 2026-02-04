@@ -64,7 +64,6 @@ export default function CustomForm({ premium, setSheetOpen }: IProps) {
   });
 
   async function onSubmit(formValues: useFormSchemaType) {
-    console.log(formValues);
     setState(true);
     try {
       if (premium) {
@@ -98,7 +97,6 @@ export default function CustomForm({ premium, setSheetOpen }: IProps) {
     }
   }, [usersList]);
 
-  console.log(premium ,"premium")
 
   return (
     <Form {...form}>

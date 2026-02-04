@@ -63,12 +63,12 @@ export default function CustomForm({ story, setSheetOpen }: IProps) {
     defaultValues: story
       ? {
           title: story?.title,
-          thumbnailUrl: story?.thumbnailUrl,
+          thumbnail: story?.thumbnail,
           media: story?.media || initialMediaData,
         }
       : {
           title: '',
-          thumbnailUrl: '',
+          thumbnail: '',
           media: initialMediaData,
         },
   });
@@ -105,7 +105,7 @@ export default function CustomForm({ story, setSheetOpen }: IProps) {
   async function onSubmit(formValues: useFormSchemaType) {
     try {
       setState(true);
-      const valuesWithImg = await uploadFile<StoryV2Type>(formValues, 'thumbnailUrl');
+      const valuesWithImg = await uploadFile<StoryV2Type>(formValues, 'thumbnail');
 
       const formattedMedia = await Promise.all(
         formValues.media.map(async (media, index) => {
@@ -148,10 +148,10 @@ export default function CustomForm({ story, setSheetOpen }: IProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <TextField name="title" label="Hikoya nomi" required />
         <VideoUploadField
-          name="thumbnailUrl"
+          name="thumbnail"
           label="Hikoya rasmi"
           types={imageTypes}
-          defaultValue={typeof story?.thumbnailUrl === 'string' ? story?.thumbnailUrl : ''}
+          defaultValue={typeof story?.thumbnail === 'string' ? story?.thumbnail : ''}
         />
 
         <div className="flex flex-col gap-4">

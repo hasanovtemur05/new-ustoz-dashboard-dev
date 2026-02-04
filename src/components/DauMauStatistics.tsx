@@ -131,7 +131,6 @@ const DauMauStatisticsTable: React.FC = () => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      console.log(url, 'url');
       a.download = `dau-mau-statistika-${selectedMonth}-oy.xlsx`;
       document.body.appendChild(a);
       a.click();

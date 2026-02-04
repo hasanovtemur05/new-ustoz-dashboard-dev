@@ -16,12 +16,9 @@ interface MathField {
 export default function MathQuill({ formula, setFormula }: MathQuillProps) {
   function handleChange(mathField: MathField) {
     setFormula(mathField.latex());
-    console.log(mathField.latex(), "formula");
   }
 
   function handleInsertSymbol(symbol: string) {
-    console.log(symbol);
-    console.log(formula, "formula");
     setFormula((oldFormula) => oldFormula + symbol);
   }
   return (

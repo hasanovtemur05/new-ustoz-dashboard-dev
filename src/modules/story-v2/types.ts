@@ -18,13 +18,13 @@ export interface IStoryMedia {
 export interface StoryV2Type {
   id: string;
   title?: string;
-  thumbnailUrl: string;
+  thumbnail: string;
   media: IStoryMedia[];
 }
 
 export interface StoryV2InputType {
   title?: string;
-  thumbnailUrl: string;
+  thumbnail: string;
   media?: IStoryMedia[];
 }
 

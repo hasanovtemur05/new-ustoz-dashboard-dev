@@ -22,6 +22,7 @@ export interface Course {
   price?: number;
   audioLink?: string;
   teacherId: string;
+  ratingCount: number;
   seoKeywords: string | string[];
 }
 
@@ -49,3 +50,14 @@ export interface CourseEditBody {
   id: string;
   values: CourseInput;
 }
+
+export interface GetCourseCommentsParams {
+  id: string;
+  pageNumber?: number;
+  pageSize?: number;
+  status?: 'PENDING' | 'APPROVED' | 'REJECTED';
+}
+
+// types.ts
+
+

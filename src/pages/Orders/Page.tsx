@@ -4,13 +4,15 @@ import Loader from 'components/Loader';
 import { createDataColumns } from './Columns';
 import { Pagination } from 'components/Pagination';
 import { useOredersList } from 'modules/orders/hooks/useList';
-import { IOrder, OrderType, DonationStatus } from 'modules/orders/types';
+import { IOrder, OrderType, DonationStatus, OrdersCreateType } from 'modules/orders/types';
 
 import { AlertDialog } from 'components/AlertDialog';
 import { useDeleteOrder } from 'modules/orders/hooks/useDelete';
 import SelectWithoutForm from 'components/fields/SelectWithoutForm';
 import { Input } from 'components/ui/input';
 import { Button } from 'components/ui/button';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from 'components/ui/sheet';
+import OrdersForm from './OrdersForm'; 
 
 const typeData = [
   { id: OrderType.ACTIVE, name: 'Faolar' },
@@ -36,6 +38,7 @@ const OrdersPage = () => {
   const [firstname, setFirstname] = useState<string>('');
   const [lastname, setLastname] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
+  const [selectedRow, setSelectedRow] = useState<OrdersCreateType | null>(null);
 
   const [searchFilters, setSearchFilters] = useState({
     status: 'ALL_STATUS',
@@ -53,6 +56,9 @@ const OrdersPage = () => {
   };
 
   const { data: orders, isLoading, pagenationInfo } = useOredersList(currentPage, filters);
+
+  console.log(orders, 'order list');
+  
 
   const handleSearch = () => {
     setSearchFilters({
@@ -90,6 +96,11 @@ const OrdersPage = () => {
     setSheetOpen,
     currentPage,
   });
+
+   const handleSheetClose = () => {
+    setSheetOpen(false);
+    setSelectedRow(null);
+  };
 
   return (
     <div>
@@ -129,6 +140,11 @@ const OrdersPage = () => {
         </div>
       </div>
 
+       <div className='flex justify-between  p-4'>
+        <h1 className="text-2xl font-bold">Sotib olganlar</h1>
+        <Button onClick={() => setSheetOpen(true)}>Kursni aktivlashtirish</Button>
+      </div>
+
       {isLoading ? (
         <Loader />
       ) : (
@@ -137,6 +153,21 @@ const OrdersPage = () => {
           <Pagination className="justify-end mt-3" currentPage={currentPage} setCurrentPage={setCurrentPage} paginationInfo={pagenationInfo} />
         </>
       )}
+
+      <Sheet open={isSheetOpen} onOpenChange={handleSheetClose}>
+        <SheetContent className="overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>
+              {selectedRow ? 'Tahrirlash' : 'Aktivlashtirish'}
+            </SheetTitle>
+          </SheetHeader>
+          <div className="mt-6">
+            <OrdersForm
+              setSheetOpen={setSheetOpen}
+            />
+          </div>
+        </SheetContent>
+      </Sheet>
 
       <AlertDialog
         alertTitle="Ishonchingiz komilmi? "

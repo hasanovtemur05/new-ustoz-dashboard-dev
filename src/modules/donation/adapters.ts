@@ -1,6 +1,5 @@
 import { Donation } from './types';
 export const getData = (item?: Donation) => {
-  console.log(item?.user);
 
   return {
     id: item?.id ?? '',

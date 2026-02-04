@@ -21,7 +21,6 @@ export default function CheckFileForm({ setSheetOpen }: IProps) {
   async function onSubmit(values: useCheckFileSchemaType) {
     setLoading(true);
     try {
-      console.log('Form values:', values);
       const formData = new FormData();
       formData.append('file', values.file);
 
@@ -54,7 +53,6 @@ export default function CheckFileForm({ setSheetOpen }: IProps) {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
 
-      console.log('Fayl yuklab olindi:', fileName);
     } catch (error) {
       console.error('Xato:', error);
       alert('Aniqlanmagan xatolik!');

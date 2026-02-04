@@ -25,7 +25,6 @@ interface IProps {
 
 export const Pagination = ({ className, currentPage, setCurrentPage, paginationInfo }: IProps) => {
   // const { pageNumber, pageCount } = paginationInfo;
-  console.log(paginationInfo, 'pagination info');
 
   const handleNextPage = () => {
     if (currentPage < paginationInfo?.pageCount) {

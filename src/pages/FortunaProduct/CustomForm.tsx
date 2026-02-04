@@ -89,7 +89,6 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
   // product => count , probobility
   // coin => value
 
-  console.log(form.formState.errors);
 
   return (
     <Form {...form}>

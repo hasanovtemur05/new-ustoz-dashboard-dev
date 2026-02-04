@@ -54,7 +54,6 @@ export default function QuizForm({ quiz, setSheetOpen }: IProps) {
       const res = await http.get(`battle-game/${id}`);
       if (res.status === 200) {
         const data = res?.data?.data;
-        console.log(data);
 
         form.setValue('options', data?.quizOptions);
       }

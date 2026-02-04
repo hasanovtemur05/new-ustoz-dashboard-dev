@@ -37,7 +37,6 @@ export default function CustomForm({ banner, setSheetOpen }: IProps) {
 
   const { data: productList } = usePromocodeProductsList();
 
-  console.log(productList, 'productList');
 
   const form = useForm<useFormSchemaType>({
     resolver: zodResolver(schema),
@@ -76,7 +75,6 @@ export default function CustomForm({ banner, setSheetOpen }: IProps) {
         name: el.title,
         type: el.id || el.rewardId,
       }));
-      console.log(newArr, 'newArr');
       setCoursesData(newArr);
     }
   }, [productList]);

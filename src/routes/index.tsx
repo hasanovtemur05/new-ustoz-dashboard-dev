@@ -43,6 +43,8 @@ import AddRewardToLessons from 'pages/AddRewardToLessons/Page';
 import MarketTasksPage from 'pages/MarketTasks/Page';
 import UsersHalfComplitedCoursesPage from 'pages/StatisticsHalfCompleteCourse/Page';
 import SurveyPage from 'pages/Survey';
+import CourseComments from 'pages/courses-comments';
+import BottomSheet from 'pages/BottomSheet/pages';
 
 const routePermissions: { [key: string]: UserRole[] } = {
   '/': [UserRole.SUPER_ADMIN, UserRole.STATISTICS_ADMIN],
@@ -59,8 +61,9 @@ const routePermissions: { [key: string]: UserRole[] } = {
   '/notifications': [UserRole.SUPER_ADMIN, UserRole.NOTIFICATION_ADMIN],
   '/info': [UserRole.SUPER_ADMIN],
   '/certificate': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
-  '/story': [UserRole.SUPER_ADMIN, UserRole.NOTIFICATION_ADMIN],
-  '/banner': [UserRole.SUPER_ADMIN, UserRole.NOTIFICATION_ADMIN],
+  '/story': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN, UserRole.NOTIFICATION_ADMIN],
+  '/banner': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN, UserRole.NOTIFICATION_ADMIN],
+
   '/category': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN],
   '/category/:categoryId': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN],
   '/donation': [UserRole.SUPER_ADMIN],
@@ -90,6 +93,7 @@ const routes = [
   { path: '/exam/:lessonId', element: <LastExam /> },
   { path: '/battle-question/:lessonId', element: <BattleQuestionPage /> },
   { path: '/courses/:courseId/:moduleId', element: <LessonsPage /> },
+  { path: '/courses/:courseId/comments', element: <CourseComments /> },
   { path: '/courses/:courseId/:moduleId/:lessonId', element: <NewQuizPage /> },
   { path: '/news', element: <NewsPage /> },
   { path: '/puzzles', element: <PuzzlesPage /> },
@@ -105,6 +109,7 @@ const routes = [
   { path: '/premium', element: <PremiumPage /> },
   { path: '/user-certificate', element: <UsersCertificatesPage /> },
   { path: '/promocode', element: <PromocodePage /> },
+  { path: '/bottom-sheet', element: <BottomSheet /> },
   { path: '/market-promocode', element: <MarketPromocodePage /> },
   { path: '/market-tasks', element: <MarketTasksPage /> },
   { path: '/orders', element: <OrdersPage /> },
@@ -117,6 +122,7 @@ const routes = [
   { path: '/add-reward-to-lessons', element: <AddRewardToLessons /> },
   { path: '/half-completed-course-users', element: <UsersHalfComplitedCoursesPage /> },
   { path: '/survey', element: <SurveyPage /> },
+
 ];
 
 export const Routes = () => {

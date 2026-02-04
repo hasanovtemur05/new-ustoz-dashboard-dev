@@ -51,7 +51,6 @@ export const createDataColumns = ({ getRowData, setSheetOpen, setDialogOpen }: I
     cell: ({ row }) => {
       const startDate: string = row.getValue('startDate') || '';
       const endDate: string = row.original.endDate || '';
-      console.log(endDate);
       return (
         <>
           {formatDateTime(startDate, true)} / {formatDateTime(endDate, true)}

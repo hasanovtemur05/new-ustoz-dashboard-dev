@@ -87,7 +87,6 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
     }
   }
 
-  console.log(form.formState.errors);
 
   const surveyOptions = surveys.map((survey) => ({
     name: survey.question,

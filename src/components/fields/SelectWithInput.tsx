@@ -38,7 +38,6 @@ export default function SelectWithInpatch({
   );
 
  
-console.log(isLoading,"isLoading");
   return (
     <FormField
       control={control}

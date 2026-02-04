@@ -21,6 +21,8 @@ const Courses = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data: coursesList, isLoading, paginationInfo } = useCoursesList({ currentPage });
+
+  
   
   const { triggerCourseEdit } = useEditCourse({
     id: course?.id,

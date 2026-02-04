@@ -11,7 +11,6 @@ interface SymbolsProps {
 }
 
 export default function TexSymbols({ onClick }: SymbolsProps) {
-  console.log(texSymbols, "texSymbols");
 
   const buttonNodes = texSymbols.map((symbol: SymbolData) => (
     <button

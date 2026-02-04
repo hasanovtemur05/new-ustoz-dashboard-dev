@@ -29,6 +29,8 @@ const Notifications = () => {
   } = useNotificationsStatisticList(currentPage, 10,openStatistic);
   const { triggerNotificationDelete } = useDeleteNotification(notification?.id!);
 
+  
+
   const getRowData = (notification: Notification) => {
     setNotification(notification);
   };

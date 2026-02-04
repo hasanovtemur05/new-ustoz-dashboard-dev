@@ -19,7 +19,6 @@ export default function NewUsersByAuthMethod() {
   const [type, setType] = useState(AuthType.GOOGLE);
   const validDate = date?.from && date.to ? date : getDefaultDateRange();
   const { data: newUsers } = useUsersByAuthMethod(type, validDate);
-  console.log('newUsers by auth method', newUsers);
 
   const options = useMemo(() => {
     return {

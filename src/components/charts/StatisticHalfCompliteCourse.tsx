@@ -24,14 +24,12 @@ export default function StatisticHalfCompliteCourse() {
   const validDate = date?.from && date.to ? date : getDefaultDateRange();
   
   const { data: newUsers } = useUsersByAuthMethod(type, validDate);
-  console.log('newUsers by auth method', newUsers);
 
   const [selectedCourseIndex, setSelectedCourseIndex] = useState<number>(0);
   const [selectedLessonIndex, setSelectedLessonIndex] = useState<number>(0);
 
   const { data: coursesList } = useCoursesList();
 
-  console.log('coursesData', coursesList);
 
   // Kurs o'zgarganda birinchi darsni tanlash
   useEffect(() => {

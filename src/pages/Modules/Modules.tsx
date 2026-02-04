@@ -19,7 +19,6 @@ const Modules = () => {
   const { courseId } = useParams();
   const { data: modulesList, isLoading } = useModulesList(courseId!);
   const { triggerModuleDelete } = useDeleteModule(module?.id!);
-console.log(modulesList);
 
   // const lastModuleOrder = modulesList.at(-1)?.order;
 
@@ -33,7 +32,6 @@ console.log(modulesList);
     setSheetOpen,
   });
 
-  console.log(modulesList ,"data");
   
   return (
     <div>

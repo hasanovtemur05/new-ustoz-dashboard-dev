@@ -94,7 +94,6 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
     }
   }
 
-  console.log(form.formState.errors);
 
   const courseOptions =
     courses?.map((course) => ({

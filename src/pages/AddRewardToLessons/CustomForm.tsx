@@ -3,12 +3,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from 'components/ui/form';
 import { SelectField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
-import useFileUploader from 'hooks/useFileUploader';
 import { useCoursesList } from 'modules/courses/hooks/useCoursesList';
 import { useEffect, useState } from 'react';
 import { schema, useFormSchemaType } from './schema';
 import { ICourseReward } from 'modules/add-reward-to-lessons/types';
-import VideoUploadField from 'components/fields/VideoUploder';
 import { useCourseLessonsList } from 'modules/lessons/hooks/useCourseLessonsList';
 import { useCreateCourseReward } from 'modules/add-reward-to-lessons/hooks/useCreate';
 import { useEditCourseReward } from 'modules/add-reward-to-lessons/hooks/useEdit';
@@ -40,6 +38,8 @@ export default function CustomForm({ selectedData, setSheetOpen }: IProps) {
   const { data: coursesList, isLoading: loadingCourses } = useCoursesList();
   const { data: lessons, isLoading: loadingLessons } = useCourseLessonsList(selectedCourseId);
   const { data: rewards, isLoading: loadingRewards } = useLessonRewardList(100);
+
+  
 
   const form = useForm<useFormSchemaType>({
     resolver: zodResolver(schema),

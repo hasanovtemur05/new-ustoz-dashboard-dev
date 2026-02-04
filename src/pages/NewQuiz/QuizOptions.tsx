@@ -15,7 +15,6 @@ export default function QuizOptions() {
 
   const quizType = watch('type');
 
-  console.log(optionsFields ,"test")
 
   return (
     <RadioGroup

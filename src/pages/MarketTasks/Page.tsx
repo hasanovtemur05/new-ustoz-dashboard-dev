@@ -31,7 +31,6 @@ const MarketTasksPage = () => {
     setSheetOpen,
   });
 
-  console.log(paginationInfo, 'paginationInfo');
 
   return (
     <div>

@@ -53,7 +53,6 @@ export default function CustomForm({ certificate, setSheetOpen }: IProps) {
      
 
       const valuesWithVideo = await uploadFile<TeacherInputType>(formValues, "photo");
-      console.log(valuesWithVideo);
  
 
       if (certificate) {

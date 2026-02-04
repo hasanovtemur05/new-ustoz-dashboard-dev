@@ -83,14 +83,12 @@ export default function CustomForm({ banner, setSheetOpen }: IProps) {
   }
 
   const type = form.watch('type');
-  // console.log(form.setError(title,));
 
   useEffect(() => {
     if (type === BannerType.COURSE || banner?.type === BannerType.COURSE) {
       form.register('objectId', { required: 'Kursni tanlash talab qilinadi' });
     }
     if (type === BannerType.LINK || banner?.type === BannerType.LINK) {
-      console.log('link');
 
       form.register('link', { required: 'Link kiritish talab qilinadi' });
     }

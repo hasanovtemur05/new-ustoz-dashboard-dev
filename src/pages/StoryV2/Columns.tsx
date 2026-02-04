@@ -16,11 +16,11 @@ export const createDataColumns = ({ getRowData, setSheetOpen, setDialogOpen }: I
   },
 
   {
-    accessorKey: 'thumbnailUrl',
+    accessorKey: 'thumbnail',
     header: 'Story rasmi',
     cell: ({ row }) => {
       return (
-        <a style={{ color: 'blue', cursor: 'pointer' }} target="_blank" rel="noreferrer noopener" href={`${baseMediaUrl}/${row.getValue('thumbnailUrl')}`}>
+        <a style={{ color: 'blue', cursor: 'pointer' }} target="_blank" rel="noreferrer noopener" href={`${baseMediaUrl}/${row.getValue('thumbnail')}`}>
           Rasmni ko'rish
         </a>
       );

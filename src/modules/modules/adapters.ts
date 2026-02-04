@@ -1,6 +1,5 @@
 import { Module } from './types';
 export const getModule = (item?: Module) => {
-  console.log(item);
   
   return {
     id: item?.id ?? '',

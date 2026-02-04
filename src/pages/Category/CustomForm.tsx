@@ -28,7 +28,6 @@ export default function CustomForm({
 
   const { triggerCreate } = useCreateCategories({ setSheetOpen });
   const { triggerEdit, isPending: isNotificationEditPending } = useEditCategories({ id: category?.id, setSheetOpen});
-console.log(switchState);
 
 
   const form = useForm<useFormSchemaType>({

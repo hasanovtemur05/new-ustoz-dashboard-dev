@@ -30,7 +30,6 @@ const LessonRewardPage = () => {
     setSheetOpen,
   });
 
-  console.log(rewards, 'rewards');
 
   return (
     <div>

@@ -44,8 +44,8 @@ const routePermissions: { [key: string]: UserRole[] } = {
   '/notifications': [UserRole.SUPER_ADMIN, UserRole.NOTIFICATION_ADMIN],
   '/info': [UserRole.SUPER_ADMIN],
   '/certificate': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
-  '/story': [UserRole.SUPER_ADMIN, UserRole.NOTIFICATION_ADMIN],
-  '/banner': [UserRole.SUPER_ADMIN, UserRole.NOTIFICATION_ADMIN],
+  '/story': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN, UserRole.NOTIFICATION_ADMIN],    /////////
+  '/banner': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN, UserRole.NOTIFICATION_ADMIN],   /////////
   '/category': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN],
   '/donation': [UserRole.SUPER_ADMIN],
   '/premium-plan': [UserRole.SUPER_ADMIN],
@@ -161,6 +161,7 @@ const SideNav = ({ isSideNavOpen }: IProps) => {
         { title: 'Market Promocode', link: '/market-promocode' },
         { title: 'Baraban promocode', link: '/fortuna-promocode' },
         { title: 'Darslar promocode', link: '/lesson-reward-promocode' },
+        { title: 'Bottom sheet', link: '/bottom-sheet' },
       ]
     },
     {

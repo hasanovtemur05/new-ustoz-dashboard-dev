@@ -18,7 +18,6 @@ export const createDataColumns = ({ getRowData, setSheetOpen, setDialogOpen, cur
     accessorKey: 'firstname',
     header: 'Talaba',
     cell: ({ row }) => {
-      console.log('row', row);
       return <>{row.original?.firstname + ' ' + row.original.lastname}</>;
     },
   },

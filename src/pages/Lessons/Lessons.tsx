@@ -37,7 +37,9 @@ const Lessons = () => {
     setSheetOpen,
   });
 
-  console.log(paginationInfo);
+  console.log(lessonsList, "lessonlar ruyxati");
+  
+  
   
   return (
     <div>
