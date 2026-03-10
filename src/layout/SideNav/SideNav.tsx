@@ -10,20 +10,18 @@ import {
   NotebookPen,
   ShoppingBag,
   HandCoins,
-  Plane,
   BadgeCheck,
-  GraduationCap,
   Handshake,
-  User,
   TicketPercent,
-  MailQuestion,
   CalendarClock,
   BarChart,
-  Bot,
   Gift,
   ShieldQuestion,
   ChevronDown,
-} from 'lucide-react';
+  PhoneCall,
+  BookType,
+  Gamepad2
+  } from 'lucide-react';
 import { Button } from 'components/ui/button';
 import { cn } from 'utils/styleUtils';
 import { useContext, useState } from 'react';
@@ -37,7 +35,8 @@ interface IProps {
 const routePermissions: { [key: string]: UserRole[] } = {
   '/': [UserRole.SUPER_ADMIN, UserRole.STATISTICS_ADMIN],
   '/teachers': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
-  '/courses': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
+  '/courses': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN, UserRole.TOP_30_ADMIN],
+  '/books': [UserRole.SUPER_ADMIN],
   '/course-assistants': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/news': [UserRole.SUPER_ADMIN, UserRole.NOTIFICATION_ADMIN],
   '/puzzles': [UserRole.SUPER_ADMIN],
@@ -63,6 +62,8 @@ const routePermissions: { [key: string]: UserRole[] } = {
   '/lesson-reward-promocode': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/add-reward-to-lessons': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/survey': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
+  '/call-center': [ UserRole.CALL_CENTER],
+  '/influencer': [UserRole.SUPER_ADMIN, UserRole.TOP_30_ADMIN],
 };
 
 const SideNav = ({ isSideNavOpen }: IProps) => {
@@ -91,6 +92,11 @@ const SideNav = ({ isSideNavOpen }: IProps) => {
         { title: 'Kurslar', link: '/courses' },
         { title: 'Kurs Assistant', link: '/course-assistants' },
       ]
+    },
+     {
+      title: 'Kitoblar',
+      icon: BookType,
+      link: '/books',
     },
     {
       title: 'Yangiliklar',
@@ -125,6 +131,11 @@ const SideNav = ({ isSideNavOpen }: IProps) => {
       title: 'Bannerlar',
       icon: NotebookPen,
       link: '/banner',
+    },
+    {
+      title: `Web o'yinlar`,
+      icon: Gamepad2,
+      link: '/web-games',
     },
     {
       groupId: 'shop',
@@ -189,24 +200,41 @@ const SideNav = ({ isSideNavOpen }: IProps) => {
       icon: ShieldQuestion ,
       link: '/survey',
     },
+    {
+      title: "Call Center",
+      icon: PhoneCall,
+      link: '/call-center',
+    }
   ];
 
-  const hasPermission = (item: any): boolean => {
-    if (!userData?.role) return false;
-    if (userData.role === UserRole.SUPER_ADMIN) return true;
-    
-    if (item.link) {
-      return routePermissions[item.link]?.includes(userData.role) || false;
-    }
-    
-    if (item.items) {
-      return item.items.some((subItem: any) => 
-        routePermissions[subItem.link]?.includes(userData.role)
-      );
-    }
-    
+const hasPermission = (item: any): boolean => {
+  if (!userData?.role) return false;
+
+  // 🚫 CALL_CENTER uchun bosh sahifa (/) yo‘q
+  if (userData.role === UserRole.CALL_CENTER && item.link === '/') {
     return false;
-  };
+  }
+
+  // 👑 SUPER_ADMIN hammasini ko‘radi
+  if (userData.role === UserRole.SUPER_ADMIN) {
+    return true;
+  }
+
+  // 🔗 Oddiy link
+  if (item.link) {
+    return routePermissions[item.link]?.includes(userData.role) ?? false;
+  }
+
+  // 📂 Group menu
+  if (item.items) {
+    return item.items.some((subItem: any) =>
+      routePermissions[subItem.link]?.includes(userData.role)
+    );
+  }
+
+  return false;
+};
+
 
   const filteredMenuItems = menuItems.filter(hasPermission);
 

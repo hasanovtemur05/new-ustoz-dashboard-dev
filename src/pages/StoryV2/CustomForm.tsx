@@ -102,45 +102,65 @@ export default function CustomForm({ story, setSheetOpen }: IProps) {
   };
 
   // Formani yuborish
-  async function onSubmit(formValues: useFormSchemaType) {
-    try {
-      setState(true);
-      const valuesWithImg = await uploadFile<StoryV2Type>(formValues, 'thumbnail');
+async function onSubmit(formValues: useFormSchemaType) {
+  try {
+    setState(true);
+    const valuesWithImg = await uploadFile<StoryV2Type>(formValues, 'thumbnail');
 
-      const formattedMedia = await Promise.all(
-        formValues.media.map(async (media, index) => {
-          let uploadedMediaUrl = media.mediaUrl;
-          if (media.mediaUrl instanceof File) {
-            const values = await uploadFile<IStoryMedia>(media, 'mediaUrl');
-            uploadedMediaUrl = values.mediaUrl;
-          }
-          return cleanEmptyStrings({
-            ...media,
-            mediaUrl: uploadedMediaUrl,
-            deadline: media.deadline.includes('00.000Z') ? media.deadline : media.deadline + ':00Z',
-            sortId: index,
-          });
-        })
-      );
+    const formattedMedia = await Promise.all(
+      formValues.media.map(async (media, index) => {
+        let uploadedMediaUrl = media.mediaUrl;
+        if (media.mediaUrl instanceof File) {
+          const values = await uploadFile<IStoryMedia>(media, 'mediaUrl');
+          uploadedMediaUrl = values.mediaUrl;
+        }
 
-      const formattedValues = {
-        ...valuesWithImg,
-        media: formattedMedia,
-      };
+        // Deadline formatlash - agar bo'sh bo'lsa, default qiymat berish
+        let formattedDeadline = media.deadline;
+        if (!formattedDeadline) {
+          // Agar deadline bo'sh bo'lsa, hozirdan 6 soat keyin
+          const futureDate = new Date();
+          futureDate.setHours(futureDate.getHours() + 6);
+          formattedDeadline = futureDate.toISOString();
+        } else if (!formattedDeadline.includes('00.000Z')) {
+          formattedDeadline = formattedDeadline + ':00.000Z';
+        }
 
-      const payload = cleanEmptyStrings(formattedValues);
+        return cleanEmptyStrings({
+          mediaType: media.mediaType,
+          mediaUrl: uploadedMediaUrl,
+          sortId: index,
+          title: media.title,
+          button: media.button,
+          link: media.link,
+          type: media.type,
+          deadline: formattedDeadline, // ISO 8601 formatda
+          objectId: media.objectId,
+          // button maydonini olib tashladik
+        });
+      })
+    );
 
-      if (story) {
-        triggerEdit(payload);
-      } else {
-        triggerCreate(payload);
-      }
-      setState(false);
-    } catch (error) {
-      setState(false);
-      alert('Aniqlanmagan xatolik!');
+    const payload = cleanEmptyStrings({
+      thumbnailUrl: valuesWithImg.thumbnail,
+      title: valuesWithImg.title,
+      media: formattedMedia,
+    });
+
+    console.log('Yuborilayotgan payload:', JSON.stringify(payload, null, 2));
+
+    if (story) {
+      triggerEdit(payload);
+    } else {
+      triggerCreate(payload);
     }
+    setState(false);
+  } catch (error) {
+    setState(false);
+    console.error('Xatolik:', error);
+    alert('Aniqlanmagan xatolik!');
   }
+}
 
 
   return (

@@ -1,4 +1,7 @@
 import { Outlet, useLocation, useResolvedPath, Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from 'providers/UserProvider';
+import { UserRole } from 'modules/auth/types';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,12 +21,10 @@ export default function createBreadcrumbs() {
           path: 'courses',
           element: <Breadcrumbs text="Kurslar" />,
           children: [
-            // Parent course page
             {
               path: ':courseId',
               element: <Breadcrumbs text="Bo'limlar" />,
               children: [
-                // Modules and lessons
                 {
                   path: ':moduleId',
                   element: <Breadcrumbs text="Darslar" />,
@@ -36,10 +37,13 @@ export default function createBreadcrumbs() {
                 },
               ],
             },
-            // ✅ Izohlar alohida, sibling route sifatida
             {
               path: ':courseId/comments',
               element: <Breadcrumbs text="Izohlar" />,
+            },
+             {
+              path: ':courseId/influencer',
+              element: <Breadcrumbs text="Influencer" />,
             },
           ],
         },
@@ -75,16 +79,28 @@ export default function createBreadcrumbs() {
           path: 'notifications',
           element: <Breadcrumbs text="Bildirishnomalar" />,
         },
+        {
+          path: 'call-center',
+          element: <Breadcrumbs text="Call Center" />,
+        }
       ],
     },
   ];
 }
 
-// Breadcrumb component
 function Breadcrumbs({ text }: { text: string }) {
   const location = useLocation();
   const resolvedLocation = useResolvedPath('');
   const isActive = location.pathname === resolvedLocation.pathname;
+  const { userData } = useContext(UserContext);
+  
+  // ✅ CALL_CENTER uchun bosh sahifani yashirish
+  const isCallCenter = userData?.role === UserRole.CALL_CENTER;
+  const isHomePage = resolvedLocation.pathname === '/';
+  
+  if (isCallCenter && isHomePage) {
+    return <Outlet />;
+  }
 
   return (
     <div className="flex gap-1">

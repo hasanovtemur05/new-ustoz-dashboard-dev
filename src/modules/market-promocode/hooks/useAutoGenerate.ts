@@ -3,6 +3,7 @@ import { useToast } from 'components/ui/use-toast';
 import { GenerateData } from '../api';
 import { queryClient } from 'services/react-query';
 import { showErrorToast } from 'utils/showErrorToast';
+import { PromocodeGenerate } from '../types';
 
 interface IHook {
   setSheetOpen: (state: boolean) => void;
@@ -12,8 +13,8 @@ export const useAutoGeneratePromocode = ({ setSheetOpen }: IHook) => {
   const { toast } = useToast();
 
   const { mutateAsync, isPending, isSuccess, isError } = useMutation({
-    mutationFn: (count: number) => {
-      return GenerateData(count);
+    mutationFn: (payload: PromocodeGenerate) => {
+      return GenerateData(payload);
     },
     onSuccess: () => {
       toast({

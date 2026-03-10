@@ -51,12 +51,59 @@ export interface CourseEditBody {
   values: CourseInput;
 }
 
-export interface GetCourseCommentsParams {
+
+
+  // User interfeysi
+interface User {
   id: string;
-  pageNumber?: number;
-  pageSize?: number;
-  status?: 'PENDING' | 'APPROVED' | 'REJECTED';
+  firstname: string;
+  lastname: string;
+  username: string;
+  badge: string;
+  photo: string;
 }
+
+// Reply interfeysi
+interface Reply {
+  id: string;
+  content: string;
+  createdAt: string; // yoki Date, agar parse qilmoqchi bo'lsangiz
+  user: User;
+  likesCount: number;
+  isLiked: boolean;
+}
+
+// Data item interfeysi
+interface DataItem {
+  id: string;
+  value: number;
+  content: string;
+  createdAt: string; // yoki Date
+  user: User;
+  likesCount: number;
+  isLiked: boolean;
+  replies: Reply[];
+}
+
+// Pagination interfeysi
+interface Pagination {
+  count: number;
+  pageCount: number;
+  pageNumber: number;
+  pageSize: number;
+}
+
+// Meta interfeysi
+interface Meta {
+  pagination: Pagination;
+}
+
+// Yakuniy API Response interfeysi
+export interface GetCourseCommentsParams {
+  data: DataItem[];
+  meta: Meta;
+}
+
 
 // types.ts
 

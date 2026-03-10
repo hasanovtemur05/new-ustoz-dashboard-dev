@@ -13,4 +13,5 @@ export const bannerTypeData = [
   { type: BannerType.PREMIUM, name: 'Premium' },
   { type: BannerType.VEBINAR, name: 'Vebinar' },
   { type: BannerType.NONE, name: 'None' },
+  
 ];

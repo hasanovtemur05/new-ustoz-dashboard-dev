@@ -1,15 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Loader from 'components/Loader';
-import { useCourseComments } from 'modules/course-comments/hooks/useCourseCommentsLists';
-import { useEditCourseCommentsStatus } from 'modules/course-comments/hooks/editStatus'; 
-import { useLocation } from 'react-router-dom';
-import { CourseCommentsType } from 'modules/course-comments/types';
-import { Pagination } from 'components/Pagination';
 import { DataTable } from 'components/DataTable';
+import { Pagination } from 'components/Pagination';
+import { AlertDialog } from 'components/AlertDialog';
+import { Sheet } from 'components/Sheet';
+import { useCourseComments } from 'modules/course-comments/hooks/useCourseCommentsLists';
+import { useDeleteReplay } from 'modules/course-comments/hooks/useDelete'; 
+import { useLocation } from 'react-router-dom';
 import { createCourseCommentsColumns } from './Column';
 import CommentModal from './CommentsModal';
+import RepliesModal from './ReplyModal';
+import ReplayForm from './ReplayForm';
+import type { CourseComment } from 'modules/course-comments/types';
 
 const CourseComments = () => {
   const location = useLocation();
@@ -19,42 +23,76 @@ const CourseComments = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [isCommentModalOpen, setCommentModalOpen] = useState(false);
-  const [selectedComment, setSelectedComment] = useState<CourseCommentsType['data'][0] | null>(null);
+  const [isRepliesModalOpen, setRepliesModalOpen] = useState(false);
+  const [isDialogOpen, setDialogOpen] = useState(false);
+  const [isReplayOpen, setReplayOpen] = useState(false);
+  const [selectedComment, setSelectedComment] = useState<CourseComment | null>(null);
+  const [commentData, setCommentData] = useState<CourseComment | undefined>();
+  const [selectedReplyId, setSelectedReplyId] = useState<string | null>(null);
 
-  const { data, isLoading } = useCourseComments({ courseId, currentPage });
-  const { updateStatus, isPending: isUpdating } = useEditCourseCommentsStatus();
+  const { data, isLoading, paginationInfo } = useCourseComments({ 
+    courseId, 
+    currentPage 
+  });
 
-  if (isLoading) return <Loader />;
+  const { triggerReplayDelete } = useDeleteReplay();
 
-  const comments = data?.data ?? [];
-  const paginationInfo = data?.meta?.pagination;
   const pageSize = paginationInfo?.pageSize ?? 10;
 
-  const handleCommentClick = (comment: CourseCommentsType['data'][0]) => {
+  useEffect(() => {
+    if (selectedComment && data) {
+      const updatedComment = data.find((c: CourseComment) => c.id === selectedComment.id);
+      if (updatedComment) {
+        setSelectedComment(updatedComment);
+      }
+    }
+  }, [data]);
+
+  const getRowData = (comment: CourseComment) => {
+    setCommentData(comment);
+  };
+
+  const handleCommentClick = (comment: CourseComment) => {
     setSelectedComment(comment);
     setCommentModalOpen(true);
   };
 
-  const handleStatusChange = (commentId: string, newStatus: 'PENDING' | 'APPROVED' | 'REJECTED') => {
-    updateStatus({ 
-      id: commentId, 
-      status: { status: newStatus }
-    });
+  const handleRepliesClick = (comment: CourseComment) => {
+    setSelectedComment(comment);
+    setRepliesModalOpen(true);
   };
 
-  const transformedComment = selectedComment ? {
-    ...selectedComment,
-    user: {
-      ...selectedComment.user,
-      photoUrl: selectedComment.user.photoUrl ?? undefined,
-    },
-  } : null;
+  const handleDeleteReplyClick = (replyId: string) => {
+    setSelectedReplyId(replyId);
+    setDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedReplyId) return;
+    
+    await triggerReplayDelete(selectedReplyId);
+    setDialogOpen(false);
+    setSelectedReplyId(null);
+  };
+
+  const transformedComment = selectedComment
+    ? {
+        ...selectedComment,
+        user: {
+          ...selectedComment.user,
+          photoUrl: selectedComment.user.photoUrl ?? undefined,
+        },
+      }
+    : null;
 
   const columns = createCourseCommentsColumns({
     currentPage,
     pageSize,
     onCommentClick: handleCommentClick,
-    onStatusChange: handleStatusChange,
+    onRepliesClick: handleRepliesClick,
+    getRowData,
+    setDialogOpen,
+    setReplayOpen,
   });
 
   return (
@@ -64,10 +102,7 @@ const CourseComments = () => {
         <Loader />
       ) : (
         <>
-          <DataTable
-            columns={columns}
-            data={comments}
-          />
+          <DataTable columns={columns} data={data} />
 
           {paginationInfo && (
             <Pagination
@@ -80,11 +115,48 @@ const CourseComments = () => {
         </>
       )}
 
+      {/* Comment Modal */}
       <CommentModal
         isOpen={isCommentModalOpen}
         onClose={() => setCommentModalOpen(false)}
         comment={transformedComment}
-        onStatusChange={handleStatusChange}
+      />
+
+      {/* Replies Modal */}
+      {selectedComment && (
+        <RepliesModal
+          isOpen={isRepliesModalOpen}
+          onClose={() => setRepliesModalOpen(false)}
+          onDeleteClick={handleDeleteReplyClick}
+          replies={selectedComment.replies || []}
+          commentAuthor={{
+            firstname: selectedComment.user.firstname,
+            lastname: selectedComment.user.lastname,
+          }}
+        />
+      )}
+
+      {/* Add Reply Sheet */}
+      <Sheet 
+        sheetTitle="Javob qo'shish" 
+        isOpen={isReplayOpen} 
+        setSheetOpen={setReplayOpen}
+      >
+        <ReplayForm 
+          comment={commentData} 
+          setReplayOpen={setReplayOpen} 
+        />
+      </Sheet>
+
+      {/* Delete Reply Dialog */}
+      <AlertDialog
+        alertTitle="Ishonchingiz komilmi?"
+        alertDescription="Bu harakat orqili siz javobni o'chirib tashlaysiz."
+        alertCancel="Bekor qilish"
+        alertActionTitle="Davom etish"
+        alertActionFunction={handleDeleteConfirm}
+        isOpen={isDialogOpen}
+        setIsOpen={setDialogOpen}
       />
     </div>
   );

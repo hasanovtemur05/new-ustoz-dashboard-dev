@@ -1,8 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useToast } from 'components/ui/use-toast';
-
-import { BookInput } from '../types';
 import { EditBook } from '../api';
+import { BookInput } from '../types';
 import { queryClient } from 'services/react-query';
 import { showErrorToast } from 'utils/showErrorToast';
 
@@ -14,7 +13,7 @@ interface IHook {
 export const useEditBook = ({ id = '', setSheetOpen }: IHook) => {
   const { toast } = useToast();
 
-  const { mutate, isPending, isSuccess, isError } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: (values: BookInput) => EditBook({ values, id }),
     onSuccess: () => {
       toast({
@@ -28,10 +27,5 @@ export const useEditBook = ({ id = '', setSheetOpen }: IHook) => {
     onError: (error: any) => showErrorToast(error),
   });
 
-  return {
-    triggerBookEdit: mutate,
-    isPending,
-    isSuccess,
-    isError,
-  };
+  return { triggerBookEdit: mutate, isPending };
 };

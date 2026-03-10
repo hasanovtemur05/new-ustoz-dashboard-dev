@@ -1,25 +1,22 @@
-interface DownloadLink {
-  url: string;
-  name: string;
-}
+
 
 export interface Book {
   id: string;
   name: string;
+  photo: string;
+  file: string;
+  pagesCount: number;
   description: string;
-  image: string;
-  download_link: DownloadLink;
-  mutolaa_deep_link: string;
-  author: string;
+  createdAt: string;
 }
 
 export interface BookInput {
   name: string;
+  photo: string;
+  file: string;
+  pagesCount: number;
   description: string;
-  image: string;
-  download_link: DownloadLink | string;
-  mutolaa_deep_link?: string;
-  author: string;
+  createdAt?: string;
 }
 
 export interface BookEditBody {

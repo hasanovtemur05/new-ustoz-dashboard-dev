@@ -6,8 +6,9 @@ import { Button } from './ui/button';
 interface IProps<TData> {
   row: Row<TData>;
   getRowData: (data: TData) => void;
-  setSheetOpen: (state: boolean) => void;
-  setDialogOpen: (state: boolean) => void;
+  setSheetOpen?: (state: boolean) => void;
+  setDialogOpen?: (state: boolean) => void;
+  setReplayOpen?: (state: boolean) => void;
   showAddTest?: boolean;
   addTestEl?: React.ReactNode;
   showBattle?: boolean;
@@ -20,6 +21,7 @@ export const DataTableRowActions = <TData,>({
   getRowData,
   setSheetOpen,
   setDialogOpen,
+  setReplayOpen,
   showAddTest,
   addTestEl,
   showBattle,
@@ -35,16 +37,31 @@ export const DataTableRowActions = <TData,>({
       </DropdownMenuTrigger>
 
       <DropdownMenuContent>
-        <DropdownMenuItem
-          onClick={(e) => {
-            e.stopPropagation();
-            setSheetOpen(true);
-            getRowData(row.original);
-          }}
-        >
-          Tahrirlash
-        </DropdownMenuItem>
-        {showDelete && (
+        {setSheetOpen && (
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              setSheetOpen(true);
+              getRowData(row.original);
+            }}
+          >
+            Tahrirlash
+          </DropdownMenuItem>
+        )}
+
+        {setReplayOpen && (
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              setReplayOpen(true);
+              getRowData(row.original);
+            }}
+          >
+            Javob qo'shish
+          </DropdownMenuItem>
+        )}
+
+        {showDelete && setDialogOpen && (
           <DropdownMenuItem
             className="text-red-500 focus:text-red-600 dark:focus:text-red-600"
             onClick={(e) => {
@@ -66,6 +83,7 @@ export const DataTableRowActions = <TData,>({
             {addTestEl}
           </DropdownMenuItem>
         )}
+        
         {showBattle && (
           <DropdownMenuItem
             onClick={(e) => {

@@ -1,13 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
-import { queryClient } from 'services/react-query';
-import { DeleteBook } from '../api';
 import { useToast } from 'components/ui/use-toast';
+import { DeleteBook } from '../api';
+import { queryClient } from 'services/react-query';
 import { showErrorToast } from 'utils/showErrorToast';
 
 export const useDeleteBook = (id: string) => {
   const { toast } = useToast();
 
-  const { mutate, isSuccess, isError } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: () => DeleteBook(id),
     onSuccess: () => {
       toast({
@@ -19,5 +19,5 @@ export const useDeleteBook = (id: string) => {
     onError: (error: any) => showErrorToast(error),
   });
 
-  return { triggerBookDelete: mutate, isSuccess, isError };
+  return { triggerBookDelete: mutate, isPending };
 };

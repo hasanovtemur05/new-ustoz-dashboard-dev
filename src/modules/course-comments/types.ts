@@ -1,43 +1,54 @@
-export interface CourseRating {
+export type StatusType = 'PENDING' | 'APPROVED' | 'REJECTED';
+
+export interface UserInfo {
   id: string;
-  courseId: string;
-  value: number;
+  firstname: string;
+  lastname: string;
+  username: string;
+  badge?: string;
+  photo?: string;
+  photoUrl?: string;
+}
+
+export interface CommentReply {
+  id: string;
   content: string;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
   createdAt: string;
-
-  user: {
-    id: string;
-    firstname: string;
-    lastname: string;
-    photoUrl: string | null;
-  };
-
-  // UI uchun qo‘shimcha (optional)
-  userFullName?: string;
-  userPhoto?: string | null;
+  user: UserInfo;
+  likesCount: number;
+  isLiked: boolean;
 }
 
-export interface StatusType {
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+export interface CourseComment {
+  id: string;
+  value: number; // rating (1-5)
+  content: string;
+  createdAt: string;
+  status: StatusType;
+  user: UserInfo;
+  likesCount: number;
+  isLiked: boolean;
+  replies: CommentReply[];
 }
 
-export interface CourseCommentsType {
-  data: {
-    id: string;
-    courseId: string;
-    content: string;
-    createdAt: string; // ISO string
-    status: 'PENDING' | 'APPROVED' | 'REJECTED';
-    user: {
-      firstname: string;
-      lastname: string;
-      id: string;
-      photoUrl: string | null;
-    };
-    userId: string;
-    value: number;
-  }[];
+export interface GetCourseCommentsParams {
+  id: string;
+  pageNumber?: number;
+  pageSize?: number;
+  status?: StatusType;
+}
+
+export interface CreateReplyParams {
+  ratingId: string;
+  content: string;
+}
+
+export interface DeleteReplyParams {
+  replyId: string;
+}
+
+export interface GetCourseCommentsResponse {
+  data: CourseComment[];
   meta: {
     pagination: {
       count: number;
@@ -46,4 +57,18 @@ export interface CourseCommentsType {
       pageSize: number;
     };
   };
-};
+}
+
+export interface CreateReplyResponse {
+  id: string;
+  content: string;
+  createdAt: string;
+  user: UserInfo;
+  likesCount: number;
+  isLiked: boolean;
+}
+
+export interface DeleteReplyResponse {
+  success: boolean;
+  message?: string;
+}

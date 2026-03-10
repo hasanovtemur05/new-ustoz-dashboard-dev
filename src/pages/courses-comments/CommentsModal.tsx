@@ -1,12 +1,7 @@
 
-
-
-
-import React, { useEffect, useState } from 'react'
 import { X, Star, Calendar, User } from 'lucide-react'
 import { baseMediaUrl } from 'services/api'
 
-type StatusType = 'PENDING' | 'APPROVED' | 'REJECTED'
 
 interface CommentModalProps {
   isOpen: boolean
@@ -15,7 +10,6 @@ interface CommentModalProps {
     id: string
     content: string
     value: number
-    status: StatusType
     user: {
       firstname: string
       lastname: string
@@ -23,35 +17,14 @@ interface CommentModalProps {
     }
     createdAt?: string
   } | null
-  onStatusChange: (id: string, status: StatusType) => void
 }
 
-const statusLabel: Record<StatusType, string> = {
-  PENDING: 'Kutilmoqda',
-  APPROVED: 'Tasdiqlangan',
-  REJECTED: 'Rad etilgan',
-}
-
-const statusStyle: Record<StatusType, string> = {
-  PENDING: 'text-yellow-700 bg-yellow-50 border-yellow-200',
-  APPROVED: 'text-green-700 bg-green-50 border-green-200',
-  REJECTED: 'text-red-700 bg-red-50 border-red-200',
-}
 
 const CommentModal: React.FC<CommentModalProps> = ({
   isOpen,
   onClose,
   comment,
-  onStatusChange,
 }) => {
-  const [selectedStatus, setSelectedStatus] =
-    useState<StatusType>('PENDING')
-
-  useEffect(() => {
-    if (comment) {
-      setSelectedStatus(comment.status)
-    }
-  }, [comment?.status]) 
 
   if (!isOpen || !comment) return null
 
@@ -59,10 +32,6 @@ const CommentModal: React.FC<CommentModalProps> = ({
     ? `${baseMediaUrl}/${comment.user.photoUrl}`
     : null
 
-  const changeStatus = (status: StatusType) => {
-    setSelectedStatus(status)        // UI darhol o‘zgaradi
-    onStatusChange(comment.id, status) // parent update
-  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -107,13 +76,6 @@ const CommentModal: React.FC<CommentModalProps> = ({
                 </div>
               )}
             </div>
-
-            {/* STATUS BADGE */}
-            <span
-              className={`ml-auto px-2 py-0.5 rounded border text-xs font-medium ${statusStyle[selectedStatus]}`}
-            >
-              {statusLabel[selectedStatus]}
-            </span>
           </div>
 
            <div className="flex items-center gap-1">
@@ -132,27 +94,11 @@ const CommentModal: React.FC<CommentModalProps> = ({
             </span>
           </div>
 
-          {/* COMMENT */}
           <div className="bg-gray-50 border rounded p-3">
             {comment.content}
           </div>
 
-          {/* BUTTONS */}
-          <div className="flex gap-2">
-            {(Object.keys(statusLabel) as StatusType[]).map((s) => (
-              <button
-                key={s}
-                onClick={() => changeStatus(s)}
-                className={`px-3 py-1.5 border rounded text-xs ${
-                  selectedStatus === s
-                    ? 'bg-black text-white'
-                    : 'bg-white'
-                }`}
-              >
-                {statusLabel[s]}
-              </button>
-            ))}
-          </div>
+         
         </div>
       </div>
     </div>

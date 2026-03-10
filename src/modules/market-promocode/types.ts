@@ -16,3 +16,9 @@ export interface IMarketPromocodeEditBody {
   id: string;
   values: IMarketPromocodeInput;
 }
+
+export interface PromocodeGenerate {
+  number: number;
+  discountType: string;
+  discountValue: number;
+}

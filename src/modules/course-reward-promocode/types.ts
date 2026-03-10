@@ -16,3 +16,5 @@ export interface IRewardPromocodeEditBody {
   id: string;
   values: IRewardPromocodeInput;
 }
+
+

@@ -1,5 +1,5 @@
 import http from 'services/api';
-import { IMarketPromocodeInput, IMarketPromocodeEditBody } from './types';
+import { IMarketPromocodeInput, IMarketPromocodeEditBody, PromocodeGenerate } from './types';
 
 export const GetDatasList = async () => {
   return await http.get(`/market-promocode`);
@@ -8,8 +8,8 @@ export const GetDatasList = async () => {
 export const CreateData = async (values: IMarketPromocodeInput) => {
   return await http.post(`/market-promocode`, values);
 };
-export const GenerateData = async (count: number) => {
-  return await http.post(`/promocode/generate/${count}`);
+export const GenerateData = async (payload: PromocodeGenerate) => {
+  return await http.post(`/promocode/generate`, payload);
 };
 
 export const EditData = async ({ values, id }: IMarketPromocodeEditBody) => {

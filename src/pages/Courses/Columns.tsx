@@ -4,6 +4,7 @@ import { DataTableRowActions } from 'components/DataTableRowActions';
 import { Link } from 'react-router-dom';
 import { Badge } from 'components/ui/badge';
 import CustomSwitch from 'components/SwitchIsDreft';
+import { Button } from 'components/ui/button';
 
 interface IProps {
   getRowData: (course: Course) => void;
@@ -57,6 +58,7 @@ export const createCourseColumns = ({ getRowData, setSheetOpen, setDialogOpen, c
       return pricingType === 'FREE' ? type : '-';
     },
   },
+  
   {
     accessorKey: 'planLessonCount',
     header: 'Rejalashtirilgan dars soni',
@@ -66,6 +68,23 @@ export const createCourseColumns = ({ getRowData, setSheetOpen, setDialogOpen, c
       return pricingType === 'FREE' ? planLessonCount : '-';
     },
   },
+ {
+  accessorKey: 'influencer',
+  header: 'Kurs influencer',
+  cell: ({ row }) => {
+    const id = row.original.id;
+    return (
+      <Button asChild size="sm">
+        <Link
+          to={`/courses/${id}/influencer`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          Influencer
+        </Link>
+      </Button>
+    );
+  },
+},
   {
     accessorKey: 'ratingCount',
     header: 'Izohlar',

@@ -1,19 +1,26 @@
 import type { ColumnDef } from '@tanstack/react-table';
-import type { CourseCommentsType } from 'modules/course-comments/types';
+import { DataTableRowActions } from 'components/DataTableRowActions';
+import { useState } from 'react';
 
 interface IProps {
   currentPage: number;
   pageSize: number;
-  onCommentClick: (comment: CourseCommentsType['data'][0]) => void;
-  onStatusChange: (commentId: string, newStatus: 'PENDING' | 'APPROVED' | 'REJECTED') => void;
+  onCommentClick: (comment: any) => void;
+  onRepliesClick: (comment: any) => void;
+  getRowData: (comment: any) => void;
+  setDialogOpen: (state: boolean) => void;
+  setReplayOpen: (state: boolean) => void;
 }
 
 export const createCourseCommentsColumns = ({
   currentPage,
   pageSize,
   onCommentClick,
-  onStatusChange,
-}: IProps): ColumnDef<CourseCommentsType['data'][0], unknown>[] => [
+  onRepliesClick,
+  getRowData,
+  setDialogOpen,
+  setReplayOpen,
+}: IProps): ColumnDef<any>[] => [
   {
     accessorKey: 'id',
     header: 'T/R',
@@ -26,35 +33,17 @@ export const createCourseCommentsColumns = ({
       const user = row.original.user;
       return (
         <div className="flex items-center gap-2">
-          {user.photoUrl && <img src={user.photoUrl} alt={user.firstname} className="w-6 h-6 rounded-full" />}
-          <span>{user.firstname} {user.lastname}</span>
+          {user.photoUrl && (
+            <img
+              src={user.photoUrl}
+              alt={user.firstname}
+              className="w-6 h-6 rounded-full"
+            />
+          )}
+          <span>
+            {user.firstname} {user.lastname}
+          </span>
         </div>
-      );
-    },
-  },
-  {
-    accessorKey: 'status',
-    header: 'Holat',
-    cell: ({ row }) => {
-      const status = row.getValue<'PENDING' | 'APPROVED' | 'REJECTED'>('status');
-      const commentId = row.original.id;
-      
-      return (
-        <select
-          value={status}
-          onChange={(e) => onStatusChange(commentId, e.target.value as 'PENDING' | 'APPROVED' | 'REJECTED')}
-          className={`px-3 py-1.5 rounded border text-sm font-medium cursor-pointer transition-colors ${
-            status === 'APPROVED'
-              ? 'bg-green-100 text-green-800 border-green-300 hover:bg-green-200'
-              : status === 'REJECTED'
-              ? 'bg-red-100 text-red-800 border-red-300 hover:bg-red-200'
-              : 'bg-yellow-100 text-yellow-800 border-yellow-300 hover:bg-yellow-200'
-          }`}
-        >
-          <option value="PENDING">Kutilmoqda</option>
-          <option value="APPROVED">Tasdiqlangan</option>
-          <option value="REJECTED">Rad etilgan</option>
-        </select>
       );
     },
   },
@@ -83,6 +72,27 @@ export const createCourseCommentsColumns = ({
     },
   },
   {
+    accessorKey: 'createdAt',
+    header: 'Yaratilgan sana',
+    cell: ({ row }) => {
+      const dateStr = row.getValue<string>('createdAt');
+      const date = new Date(dateStr);
+      return <span>{date.toLocaleDateString()}</span>;
+    },
+  },
+  {
+    accessorKey: 'isLiked',
+    header: 'Like',
+    cell: ({ row }) => {
+      const liked = row.getValue<boolean>('isLiked');
+      return (
+        <span className={`font-semibold ${liked ? 'text-green-600' : 'text-gray-400'}`}>
+          {liked ? 'Ha' : "Yo'q"}
+        </span>
+      );
+    },
+  },
+  {
     accessorKey: 'content',
     header: 'Izoh',
     cell: ({ row }) => {
@@ -98,6 +108,45 @@ export const createCourseCommentsColumns = ({
             <span className="text-blue-600 text-sm font-medium">Ko'proq o'qish</span>
           )}
         </button>
+      );
+    },
+  },
+  {
+    accessorKey: 'replies',
+    header: 'Javoblar',
+    cell: ({ row }) => {
+      const repliesArray = row.original.replies || [];
+      const repliesCount = repliesArray.length;
+      
+      if (repliesCount === 0) {
+        return <span className="text-gray-400">Javob yo'q</span>;
+      }
+
+      return (
+        <button
+          onClick={() => onRepliesClick(row.original)}
+          className="text-left hover:text-blue-600 transition-colors cursor-pointer"
+        >
+          <span className="text-blue-600 font-medium">{repliesCount} ta javob</span>
+          <span className="text-blue-600 text-sm ml-1">Ko'rish</span>
+        </button>
+      );
+    },
+  },
+  {
+    accessorKey: 'id',
+    header: () => <span className="sr-only">Actions</span>,
+    size: 50,
+    cell: ({ row }) => {
+      return (
+        <div className="flex gap-2 items-center">
+          <DataTableRowActions
+            row={row}
+            getRowData={getRowData}
+            setDialogOpen={setDialogOpen}
+            setReplayOpen={setReplayOpen}
+          />
+        </div>
       );
     },
   },

@@ -24,7 +24,7 @@ export interface StoryV2Type {
 
 export interface StoryV2InputType {
   title?: string;
-  thumbnail: string;
+  thumbnailUrl: string;
   media?: IStoryMedia[];
 }
 

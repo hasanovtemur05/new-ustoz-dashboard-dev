@@ -36,7 +36,7 @@ interface IProps {
 const routePermissions: { [key: string]: UserRole[] } = {
   '/': [UserRole.SUPER_ADMIN, UserRole.STATISTICS_ADMIN],
   '/teachers': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
-  '/courses': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
+  '/courses': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN, UserRole.TOP_30_ADMIN],
   '/course-assistants': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/news': [UserRole.SUPER_ADMIN, UserRole.NOTIFICATION_ADMIN],
   '/puzzles': [UserRole.SUPER_ADMIN],
@@ -45,7 +45,7 @@ const routePermissions: { [key: string]: UserRole[] } = {
   '/certificate': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/story': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN, UserRole.NOTIFICATION_ADMIN],
   '/banner': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN, UserRole.NOTIFICATION_ADMIN],
-
+  '/influencer': [UserRole.SUPER_ADMIN, UserRole.TOP_30_ADMIN],
   '/category': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN],
   '/donation': [UserRole.SUPER_ADMIN],
   '/premium-plan': [UserRole.SUPER_ADMIN],

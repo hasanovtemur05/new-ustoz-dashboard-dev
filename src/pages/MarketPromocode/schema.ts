@@ -13,8 +13,9 @@ export const schema = z.object({
 export type useFormSchemaType = z.infer<typeof schema>;
 
 export const generateSchema = z.object({
-  number: z.union([z.number(), z.string()]).optional(),
-  percent: z.union([z.number(), z.string()]).optional(),
+  number: z.number().min(1),
+  discountType: z.string().min(1, 'Chegirma turini kiriting'),
+  discountValue: z.number().min(0),
 });
 
 export type useGenerateSchemaType = z.infer<typeof generateSchema>;
