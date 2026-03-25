@@ -17,16 +17,22 @@ export interface LessonReward {
   count?: number;
   type: LessonRewardType;
   file?: string;
+  isPartial?: boolean;
+  courseId?: string;
+  parts?: { id: string; title: string; photo: string; value: number }[];
 }
 
 export interface LessonRewardInputType {
   value?: any;
   title: string;
   photo: string;
-  description?: string;
+  description: string;
   count?: any;
   type: LessonRewardType;
   file?: any;
+  isPartial?: boolean;
+  courseId?: string;
+  parts?: { id?: string; title: string; photo?: any; value: number }[];
 }
 
 export interface LessonRewardEditBodyType {

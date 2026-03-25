@@ -10,14 +10,16 @@ export const getData = (item?: LessonReward) => {
     count: item?.count ?? 0,
     type: item?.type ?? LessonRewardType.EMPTY,
     file: item?.file ?? '',
-
+    isPartial: item?.isPartial ?? false,
+    courseId: item?.courseId ?? '',
+    parts: item?.parts ?? [],
   };
 };
 
 export const getDatasList = (data?: LessonReward[]) => {
   return data?.length
     ? data.map((item) => {
-        return getData(item);
-      })
+      return getData(item);
+    })
     : [];
 };

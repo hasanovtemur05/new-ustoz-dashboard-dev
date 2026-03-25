@@ -1,8 +1,15 @@
 import http from 'services/api';
 import { LessonRewardInputType, LessonRewardEditBodyType } from './types';
 
-export const GetDatasList = async (pageSize: number) => {
-  return await http.get(`/course/reward/templates?pageSize=${pageSize}`);
+export interface GetLessonRewardsQuery {
+  pageSize?: number;
+  type?: string;
+  isPartial?: boolean;
+  search?: string;
+}
+
+export const GetDatasList = async (params: GetLessonRewardsQuery) => {
+  return await http.get(`/course/reward/templates`, { params });
 };
 
 export const CreateData = async (values: LessonRewardInputType) => {

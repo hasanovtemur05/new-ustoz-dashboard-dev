@@ -39,6 +39,7 @@ const routePermissions: { [key: string]: UserRole[] } = {
   '/books': [UserRole.SUPER_ADMIN],
   '/course-assistants': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/news': [UserRole.SUPER_ADMIN, UserRole.NOTIFICATION_ADMIN],
+  '/verification': [UserRole.SUPER_ADMIN],
   '/puzzles': [UserRole.SUPER_ADMIN],
   '/notifications': [UserRole.SUPER_ADMIN, UserRole.NOTIFICATION_ADMIN],
   '/info': [UserRole.SUPER_ADMIN],
@@ -102,6 +103,11 @@ const SideNav = ({ isSideNavOpen }: IProps) => {
       title: 'Yangiliklar',
       icon: Newspaper,
       link: '/news',
+    },
+    {
+      title: 'Maxsus',
+      icon: ShieldCheck,
+      link: '/verification',
     },
     {
       title: 'Bildirishnomalar',

@@ -49,6 +49,7 @@ import CallCenterPage from 'pages/CallCenter/Pages';
 import BooksPage from 'pages/Books/Page';
 import CourseInfluencerPage from 'pages/CourseInfluencer/Page';
 import WebGamesPage from 'pages/WebGames';
+import VerificationPage from 'pages/Verification/Page';
 
 const routePermissions: { [key: string]: UserRole[] } = {
   '/': [UserRole.SUPER_ADMIN, UserRole.STATISTICS_ADMIN],
@@ -63,6 +64,7 @@ const routePermissions: { [key: string]: UserRole[] } = {
   '/courses/:courseId/influencer': [UserRole.SUPER_ADMIN, UserRole.TOP_30_ADMIN],
   '/courses/:courseId/:moduleId/:lessonId': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/news': [UserRole.SUPER_ADMIN, UserRole.NOTIFICATION_ADMIN],
+  '/verification': [UserRole.SUPER_ADMIN],
   '/puzzles': [UserRole.SUPER_ADMIN],
   '/notifications': [UserRole.SUPER_ADMIN, UserRole.NOTIFICATION_ADMIN],
   '/info': [UserRole.SUPER_ADMIN],
@@ -105,6 +107,7 @@ const routes = [
   { path: '/courses/:courseId/influencer', element: <CourseInfluencerPage /> },
   { path: '/courses/:courseId/:moduleId/:lessonId', element: <NewQuizPage /> },
   { path: '/news', element: <NewsPage /> },
+  { path: '/verification', element: <VerificationPage /> },
   { path: '/puzzles', element: <PuzzlesPage /> },
   { path: '/notifications', element: <NotificationsPage /> },
   { path: '/info', element: <Info /> },

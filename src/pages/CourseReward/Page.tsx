@@ -16,7 +16,7 @@ const LessonRewardPage = () => {
   const [isSheetOpen, setSheetOpen] = useState(false);
   const [data, setData] = useState<LessonReward>();
   // const { categoryId } = useParams();
-  const { data: rewards, isLoading } = useLessonRewardList(20);
+  const { data: rewards, isLoading } = useLessonRewardList({ pageSize: 20 });
   const { triggerInfoDelete } = useDeleteLessonReward(data?.id!);
 
   const getRowData = (info: LessonReward) => {
