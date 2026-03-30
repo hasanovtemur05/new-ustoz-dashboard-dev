@@ -5,7 +5,11 @@ export enum LessonRewardType {
   FILE = 'FILE',
   EMPTY = 'EMPTY',
   AMATEUR_CERTIFICATE = 'AMATEUR_CERTIFICATE',
+<<<<<<< HEAD
+  PROFESSIONAL_CERTIFICATE = 'PROFESSIONAL_CERTIFICATE',
+=======
   PROGRESSIVE_CERTIFICATE = 'PROGRESSIVE_CERTIFICATE'
+>>>>>>> ede40e2eeea9f88bd42150309374bf2498843de0
 }
 
 export interface LessonReward {
@@ -19,7 +23,7 @@ export interface LessonReward {
   file?: string;
   isPartial?: boolean;
   courseId?: string;
-  parts?: { id: string; title: string; photo: string; value: number }[];
+  parts?: { title: string; photo: string; value: number; lessonId: string }[];
 }
 
 export interface LessonRewardInputType {
@@ -32,7 +36,7 @@ export interface LessonRewardInputType {
   file?: any;
   isPartial?: boolean;
   courseId?: string;
-  parts?: { id?: string; title: string; photo?: any; value: number }[];
+  parts?: { title: string; photo?: any; value: number; lessonId: string }[];
 }
 
 export interface LessonRewardEditBodyType {

@@ -26,8 +26,12 @@ const typeData = [
   { type: LessonRewardType.PROMOCODE, name: 'Promocode' },
   { type: LessonRewardType.FILE, name: 'File' },
   { type: LessonRewardType.AMATEUR_CERTIFICATE, name: 'Havaskor Sertifikat' },
+<<<<<<< HEAD
+  { type: LessonRewardType.PROFESSIONAL_CERTIFICATE, name: 'Professional Sertifikat' },
+=======
   { type: LessonRewardType.PROGRESSIVE_CERTIFICATE, name: 'Yuksaluvchi Sertifikat' },
 
+>>>>>>> ede40e2eeea9f88bd42150309374bf2498843de0
 ];
 
 export type SelectType = { name: string; type: string; disabled?: boolean };
@@ -133,6 +137,7 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
               title: part.title, 
               value: Number(part.value) || 0, 
               photo: '',
+              lessonId: part.lessonId
             };
             if (part.photo && part.photo instanceof File) {
               const res = await uploadFile<any>(part, 'photo');
@@ -161,7 +166,12 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
   }
 
   const type = form.watch('type');
+<<<<<<< HEAD
+
+  console.log(typeData, 'typeData');
+=======
   const isPartial = form.watch('isPartial');
+>>>>>>> df493512ce8a54570bba3b484434acefa2ba8669
 
   return (
     <Form {...form}>
@@ -197,6 +207,13 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
               {partsFields.map((field, index) => (
                 <div key={field.id} className="flex flex-col gap-2 border bg-white dark:bg-gray-800 p-4 rounded-lg relative">
                   <TextField name={`parts.${index}.title`} label="Nomi" required />
+                  <SelectField
+                    name={`parts.${index}.lessonId`}
+                    data={lessonsData}
+                    placeholder="Darsni tanlang..."
+                    label="Darsni tanlang"
+                    required
+                  />
                   <FileField name={`parts.${index}.photo`} label="Rasm" />
                   <NumberTextField name={`parts.${index}.value`} label="Qiymati" required />
                   <Button type="button" variant="destructive" size="icon" onClick={() => remove(index)} className="absolute right-2 top-2 h-8 w-8">
@@ -204,7 +221,7 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
                   </Button>
                 </div>
               ))}
-              <Button type="button" variant="outline" onClick={() => append({ title: '', photo: '', value: 0 })}>
+              <Button type="button" variant="outline" onClick={() => append({ title: '', photo: '', value: 0, lessonId: '' })}>
                 Qism qo'shish
               </Button>
             </div>

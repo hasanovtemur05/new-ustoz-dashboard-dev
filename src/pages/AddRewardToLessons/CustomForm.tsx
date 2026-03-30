@@ -48,38 +48,24 @@ export default function CustomForm({ selectedData, setSheetOpen }: IProps) {
         courseId: selectedData ? searchParams.get('courseId') || '' : '',
         lessonId: selectedData.lessonId || '',
         rewardId: selectedData.rewardId || '',
-        partId: selectedData.partId || '',
       }
       : {
         courseId: '',
         lessonId: '',
         rewardId: '',
-        partId: '',
       },
   });
 
-  // Watch courseId and rewardId changes
+  // Watch courseId changes
   const watchedCourseId = form.watch('courseId');
-  const watchedRewardId = form.watch('rewardId');
-
-  const selectedReward = (rewards as any)?.find((r: any) => r.id === watchedRewardId);
-  const isPartialReward = selectedReward?.isPartial;
-  const rewardPartsData = selectedReward?.parts?.map((p: any, index: number) => ({
-    name: p.title || `Qism ${index + 1}`,
-    type: p.id || String(index),
-  })) || [];
 
   async function onSubmit(formValues: useFormSchemaType) {
     setState(true);
     try {
-      const payload: any = { ...formValues };
-      if (!isPartialReward || !payload.partId) {
-        delete payload.partId;
-      }
       if (selectedData) {
-        triggerEdit(payload);
+        triggerEdit(formValues as any);
       } else {
-        triggerCreate(payload);
+        triggerCreate(formValues as any);
       }
     } catch (error) {
       alert('Aniqlanmagan hatolik!');
@@ -162,17 +148,6 @@ export default function CustomForm({ selectedData, setSheetOpen }: IProps) {
             <SelectField name="rewardId" data={[]} placeholder="Mukofotlar yuklanmoqda..." label="Mukofot " />
           ) : (
             <SelectField name="rewardId" data={rewardsData} placeholder="Mukofotni tanlang..." label="Mukofot " />
-          )}
-
-          {/* Qism tanlash (faqat qisman sovg'alar uchun) */}
-          {isPartialReward && (
-            <SelectField
-              name="partId"
-              data={rewardPartsData}
-              placeholder="Qismni tanlang..."
-              label="Qismni tanlang"
-              required
-            />
           )}
         </div>
 

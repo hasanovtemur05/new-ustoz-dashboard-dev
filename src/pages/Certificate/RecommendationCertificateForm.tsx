@@ -75,6 +75,9 @@ export default function RecommendationCertificateForm({ setSheetOpen }: IProps) 
     setCoursesData(newArr);
   }, [coursesList]);
 
+  
+  
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2">

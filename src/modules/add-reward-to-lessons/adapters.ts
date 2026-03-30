@@ -7,7 +7,6 @@ export const getData = (item?: ICourseReward) => {
     reward: item?.reward ?? '',
     rewardId: item?.rewardId ?? '',
     lessonId: item?.lessonId ?? '',
-    partId: item?.partId ?? '',
   };
 };
 
