@@ -26,12 +26,8 @@ const typeData = [
   { type: LessonRewardType.PROMOCODE, name: 'Promocode' },
   { type: LessonRewardType.FILE, name: 'File' },
   { type: LessonRewardType.AMATEUR_CERTIFICATE, name: 'Havaskor Sertifikat' },
-<<<<<<< HEAD
   { type: LessonRewardType.PROFESSIONAL_CERTIFICATE, name: 'Professional Sertifikat' },
-=======
   { type: LessonRewardType.PROGRESSIVE_CERTIFICATE, name: 'Yuksaluvchi Sertifikat' },
-
->>>>>>> ede40e2eeea9f88bd42150309374bf2498843de0
 ];
 
 export type SelectType = { name: string; type: string; disabled?: boolean };
@@ -166,12 +162,7 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
   }
 
   const type = form.watch('type');
-<<<<<<< HEAD
-
-  console.log(typeData, 'typeData');
-=======
   const isPartial = form.watch('isPartial');
->>>>>>> df493512ce8a54570bba3b484434acefa2ba8669
 
   return (
     <Form {...form}>
