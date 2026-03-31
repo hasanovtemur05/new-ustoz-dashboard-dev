@@ -11,52 +11,38 @@ import { IMarketPromocode } from 'modules/market-promocode/types';
 import { useCreateMarketPromocode } from 'modules/market-promocode/hooks/useCreate';
 import { useEditMarketPromocode } from 'modules/market-promocode/hooks/useEdit';
 import MediaUploadField from 'components/fields/VideoUploder';
-import { useAutoGeneratePromocode } from 'modules/market-promocode/hooks/useAutoGenerate';
 
 interface IProps {
   banner?: IMarketPromocode;
   setSheetOpen: (state: boolean) => void;
 }
-const createMethods = [
-  {
-    name: 'File',
-    type: 'file',
-  },
-  {
-    name: 'Auto Genenatsiya(ustoz ai uchun)  ',
-    type: 'auto',
-  },
-];
 
 export default function CustomForm({ banner, setSheetOpen }: IProps) {
-  const [coursesData, setCoursesData] = useState<SelectType[]>([]);
-  const [currentPage] = useState(1);
-
+  const [productsData, setProductsData] = useState<SelectType[]>([]);
   const [state, setState] = useState(false);
+
   const { triggerCreate } = useCreateMarketPromocode({
     setSheetOpen,
   });
-  const { generatePromocode } = useAutoGeneratePromocode({
-    setSheetOpen,
-  });
+
   const { triggerEdit } = useEditMarketPromocode({
     id: banner?.id,
     setSheetOpen,
   });
 
-  const { data: productList } = useProductsList(200, currentPage, '');
+  const productResults = useProductsList(1, 200, undefined);
 
   const form = useForm<useFormSchemaType>({
     resolver: zodResolver(schema),
     defaultValues: banner
       ? {
-          productId: banner.productId,
-          file: banner.file,
-        }
+        productId: banner.productId,
+        file: banner.file,
+      }
       : {
-          productId: '',
-          file: '',
-        },
+        productId: '',
+        file: '',
+      },
   });
 
   async function onSubmit(formValues: useFormSchemaType) {
@@ -79,27 +65,30 @@ export default function CustomForm({ banner, setSheetOpen }: IProps) {
 
   useEffect(() => {
     let newArr: SelectType[] = [];
-    productList.forEach((el) =>
-      newArr.push({
-        name: el.title,
-        type: el.id,
-      })
-    );
-    setCoursesData(newArr);
-  }, [productList]);
+    const products = productResults?.data || [];
+    if (Array.isArray(products)) {
+      products?.forEach((el) =>
+        newArr.push({
+          name: el?.title,
+          type: el?.id,
+        })
+      );
+    }
+    setProductsData(newArr);
+  }, [productResults?.data]);
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2">
         <div className="flex gap-4 flex-col my-4">
-          <MediaUploadField name="file" label="Promocodlar file(exel)" types={['XLS', 'XLSX']} />
+          <MediaUploadField name="file" label="Promokodlar fayli (Excel)" types={['XLS', 'XLSX', 'xls', 'xlsx']} />
 
           <SelectField
             name="productId"
             key="productId"
-            data={coursesData}
+            data={productsData}
             placeholder="Maxsulotni tanlash  tanlang..."
-            label="Maxsulotni tanlash  tanglang"
+            label="Maxsulotni tanlash  tanlang"
           />
         </div>
         {banner ? <LoadingButton isLoading={state}>Tahrirlash</LoadingButton> : <LoadingButton isLoading={state}>Saqlash</LoadingButton>}

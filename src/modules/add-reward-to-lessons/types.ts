@@ -5,12 +5,14 @@ export interface ICourseReward {
   reward: string;
   rewardId: string;
   lessonId: string;
+  partId?: string;
 }
 
 export interface ICourseRewardInput {
   courseId: string;
   lessonId: string;
   rewardId?: string;
+  partId?: string;
 }
 
 export interface ICourseAssistantEdit {

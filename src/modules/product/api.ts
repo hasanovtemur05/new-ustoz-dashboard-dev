@@ -1,8 +1,28 @@
 import http from 'services/api';
 import { ProductInputType, ProductEditBodyType } from './types';
 
-export const GetDatasList = async (pageSize: number, pageNumber: number, categoryId: string) => {
-  return await http.get(`/product?pageSize=${pageSize}&pageNumber=${pageNumber}`, { params: categoryId ? { categoryId } : null });
+export const GetDatasList = async (
+  pageNumber: number = 1,
+  pageSize: number = 20,
+  categoryId?: string,
+  isActiveOnGift?: boolean,
+  search?: string,
+  isActive?: boolean
+) => {
+  return await http.get(`/product`, {
+    params: {
+      pageNumber,
+      pageSize,
+      categoryId,
+      isActiveOnGift,
+      search,
+      isActive
+    }
+  });
+};
+
+export const GetOneProduct = async (id: string) => {
+  return await http.get(`/product/${id}`);
 };
 
 export const CreateData = async (values: ProductInputType) => {
@@ -15,4 +35,12 @@ export const EditData = async ({ values, id }: ProductEditBodyType) => {
 
 export const DeleteData = async (id: string) => {
   return await http.delete(`/product/${id}`);
+};
+
+export const DeleteProductPhoto = async (photoId: string) => {
+  return await http.delete(`/product/photo/${photoId}`);
+};
+
+export const ExportBuyers = async (id: string) => {
+  return await http.get(`/product/${id}/buyers/export`);
 };

@@ -1,9 +1,9 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form } from 'components/ui/form';
-import { FileField, RichTextEditor, TextField } from 'components/fields';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'components/ui/form';
+import { FileField, RichTextEditor, TextField, SelectField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import useFileUploader, { useEasyFileUploader } from 'hooks/useFileUploader';
 import { useState, useEffect } from 'react';
@@ -14,8 +14,24 @@ import { useEditProduct } from 'modules/product/hooks/useEdit';
 import { useCreateProduct } from 'modules/product/hooks/useCreate';
 import NumberTextField from 'components/fields/Number';
 import { useParams } from 'react-router-dom';
-import { Plus, Minus } from 'lucide-react';
+import { Plus, Minus, Trash2 } from 'lucide-react';
 import { Button } from 'components/ui/button';
+import { Input } from 'components/ui/input';
+
+const DAYS = [
+  { name: 'Dushanba', type: 'MONDAY' },
+  { name: 'Seshanba', type: 'TUESDAY' },
+  { name: 'Chorshanba', type: 'WEDNESDAY' },
+  { name: 'Payshanba', type: 'THURSDAY' },
+  { name: 'Juma', type: 'FRIDAY' },
+  { name: 'Shanba', type: 'SATURDAY' },
+  { name: 'Yakshanba', type: 'SUNDAY' },
+];
+
+const PRODUCT_TYPES = [
+  { name: 'Jismoniy mahsulot', type: 'PHYSICAL' },
+  { name: 'AI Assistant', type: 'AI_ASSISTANT' },
+];
 
 interface IProps {
   product?: ProductType;
@@ -25,7 +41,9 @@ interface IProps {
 export default function CustomForm({ product, setSheetOpen }: IProps) {
   const { categoryId } = useParams();
   const initialState = product?.title ? product?.isActive : true;
+  const initialGiftState = product?.isActiveOnGift ?? false;
   const [switchState, setSwitchState] = useState<boolean>(initialState);
+  const [giftState, setGiftState] = useState<boolean>(initialGiftState);
   const [state, setState] = useState(false);
   const { uploadFile: easyFileUpload } = useEasyFileUploader();
 
@@ -57,9 +75,15 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
       title: product?.title || '',
       photo: product?.photo || '',
       price: product ? +product.price : '',
+      cashPrice: product?.cashPrice ? +product.cashPrice : '',
       count: product ? +product.count : '',
       content: product?.content || '',
       isActive: product?.isActive ?? switchState,
+      isActiveOnGift: product?.isActiveOnGift ?? giftState,
+      workingHours: product?.workingHours || [],
+      categoryId: categoryId || product?.categoryId || '',
+      type: product?.type || 'PHYSICAL',
+      openAiAssistantId: product?.openAiAssistantId || '',
     };
 
     // Dynamic photo values qo'shish
@@ -80,12 +104,15 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
     defaultValues: getDefaultValues(),
   });
 
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "workingHours",
+  });
+
   useEffect(() => {
     if (photoCount > 1) {
       const currentValues = form.getValues() as Record<string, any>;
-
       const newDefaultValues = getDefaultValues();
-
       const mergedValues: Record<string, any> = { ...newDefaultValues };
 
       Object.keys(currentValues).forEach((key) => {
@@ -139,9 +166,14 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
         photo: mainPhoto as string,
         photos: uploadedPhotos,
         price: +formValues.price,
+        cashPrice: formValues.cashPrice ? +formValues.cashPrice : undefined,
         count: +formValues.count,
-        categoryId: categoryId,
+        categoryId: categoryId || formValues.categoryId,
         isActive: switchState,
+        isActiveOnGift: giftState,
+        workingHours: formValues.workingHours,
+        type: formValues.type,
+        openAiAssistantId: formValues.type === 'AI_ASSISTANT' ? formValues.openAiAssistantId : undefined,
       };
 
       if (product) {
@@ -162,17 +194,101 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
         <div className="flex gap-4 flex-col my-4">
           <TextField name="title" label="Product nomi" required />
           <RichTextEditor name="content" label="Product tarifi" required />
-          <NumberTextField name="price" placeholder="Narxni kiriting" label="Narxni kiriting" required />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+             <SelectField name="type" label="Mahsulot turi" data={PRODUCT_TYPES} required />
+             {form.watch('type') === 'AI_ASSISTANT' && (
+               <TextField name="openAiAssistantId" label="OpenAI Assistant ID" placeholder="asst_..." required />
+             )}
+          </div>
+          <NumberTextField name="price" placeholder="Narxni kiriting (Coin)" label="Narxni kiriting (Coin)" required />
+          <NumberTextField name="cashPrice" placeholder="So'mda narxi (Ixtiyoriy)" label="So'mda narxi (Ixtiyoriy)" />
           <FileField name="photo" label="Asosiy mahsulot rasmi" />
           <NumberTextField name="count" placeholder="Mahsulot soni" label="Mahsulot soni" required />
-          <CustomSwitch
-            state={switchState}
-            setState={setSwitchState}
-            labelText={product?.isActive || switchState ? "Product Ko'rinsin" : "Product Ko'rinmasin"}
-          />
+          
+          <div className="flex flex-col gap-4">
+            <CustomSwitch
+              state={switchState}
+              setState={setSwitchState}
+              labelText={switchState ? "Product Ko'rinsin" : "Product Ko'rinmasin"}
+            />
+            <CustomSwitch
+              state={giftState}
+              setState={setGiftState}
+              labelText={giftState ? "Sovg'a sifatida ko'rinsin" : "Sovg'a sifatida ko'rinmasin"}
+            />
+          </div>
+
+          {/* Working Hours bo'limi */}
+          <div className="flex gap-2 flex-col border p-4 rounded-md">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-medium">Ish vaqti (Olib ketish uchun)</h3>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => append({ day: 'MONDAY', open: '09:00', close: '18:00' })}
+                className="flex items-center gap-2 bg-transparent"
+              >
+                <Plus size={16} />
+                Vaqt qo'shish
+              </Button>
+            </div>
+
+            {fields.map((field, index) => (
+              <div key={field.id} className="flex items-end gap-2 border-b pb-2">
+                <div className="flex-1">
+                  <SelectField
+                    name={`workingHours.${index}.day`}
+                    label="Kun"
+                    data={DAYS}
+                    required
+                  />
+                </div>
+                <div className="flex-1">
+                  <FormField
+                    control={form.control}
+                    name={`workingHours.${index}.open`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Ochilish</FormLabel>
+                        <FormControl>
+                          <Input type="time" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex-1">
+                  <FormField
+                    control={form.control}
+                    name={`workingHours.${index}.close`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Yopilish</FormLabel>
+                        <FormControl>
+                          <Input type="time" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => remove(index)}
+                  className="text-red-500"
+                >
+                  <Trash2 size={18} />
+                </Button>
+              </div>
+            ))}
+          </div>
 
           {/* Photos bo'limi */}
-          <div className="flex gap-2 flex-col">
+          <div className="flex gap-2 flex-col border p-4 rounded-md">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-medium">Qo'shimcha rasmlar</h3>
               <div className="flex gap-2">

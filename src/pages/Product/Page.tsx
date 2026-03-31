@@ -19,7 +19,7 @@ const ProductPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const { categoryId } = useParams();
-  const { data: notificationsList, isLoading, pagenationInfo } = useProductsList(15, currentPage, categoryId ? categoryId : '');
+  const { data: products, isLoading, pagination } = useProductsList(currentPage, 20, categoryId);
   const { triggerInfoDelete } = useDeleteProduct(data?.id!);
 
   const getRowData = (info: ProductType) => {
@@ -40,8 +40,8 @@ const ProductPage = () => {
         <Loader />
       ) : (
         <>
-          <DataTable columns={columns} data={notificationsList} />
-          <Pagination className="justify-end mt-3" currentPage={currentPage} setCurrentPage={setCurrentPage} paginationInfo={pagenationInfo} />
+          <DataTable columns={columns} data={products} />
+          <Pagination className="justify-end mt-3" currentPage={currentPage} setCurrentPage={setCurrentPage} paginationInfo={pagination} />
         </>
       )}
 

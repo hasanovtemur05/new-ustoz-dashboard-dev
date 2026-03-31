@@ -9,6 +9,7 @@ interface IProps<TData> {
   setSheetOpen?: (state: boolean) => void;
   setDialogOpen?: (state: boolean) => void;
   setReplayOpen?: (state: boolean) => void;
+  setUploadSheetOpen?: (state: boolean) => void;
   showAddTest?: boolean;
   addTestEl?: React.ReactNode;
   showBattle?: boolean;

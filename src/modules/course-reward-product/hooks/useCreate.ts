@@ -6,11 +6,8 @@ import { LessonRewardInputType } from '../types';
 import { queryClient } from 'services/react-query';
 import { showErrorToast } from 'utils/showErrorToast';
 
-interface IHook {
-  setSheetOpen: (state: boolean) => void;
-}
 
-export const useCreateLessonReward = ({ setSheetOpen }: IHook) => {
+export const useCreateLessonReward = () => {
   const { toast } = useToast();
 
   const { mutateAsync, isPending, isSuccess, isError } = useMutation({
@@ -24,7 +21,6 @@ export const useCreateLessonReward = ({ setSheetOpen }: IHook) => {
         description: 'Product haqida malumot muvaffaqiyatli yaratildi.',
       });
       queryClient.invalidateQueries({ queryKey: ['lesson_reward_list'] });
-      setSheetOpen(false);
     },
     onError: (error: any) => {
       showErrorToast(error);

@@ -10,7 +10,7 @@ import { SelectType } from 'pages/Certificate/CustomForm';
 import MediaUploadField from 'components/fields/VideoUploder';
 import { useAutoGeneratePromocode } from 'modules/market-promocode/hooks/useAutoGenerate';
 import { useEditFortunaPromocode } from 'modules/course-reward-promocode/hooks/useEdit';
-import { useCreateFortunaPromocode } from 'modules/course-reward-promocode/hooks/useCreate';
+import { useCreateCourseRewardPromocode } from 'modules/course-reward-promocode/hooks/useCreate';
 import { usePromocodeProductsList } from 'modules/course-reward-promocode/hooks/usePromocodeProductsList';
 import { IRewardPromocode } from 'modules/course-reward-promocode/types';
 
@@ -23,7 +23,7 @@ export default function CustomForm({ banner, setSheetOpen }: IProps) {
   const [coursesData, setCoursesData] = useState<SelectType[]>([]);
 
   const [state, setState] = useState(false);
-  const { triggerCreate } = useCreateFortunaPromocode({
+  const { triggerCreate } = useCreateCourseRewardPromocode({
     setSheetOpen,
   });
   const { generatePromocode } = useAutoGeneratePromocode({
@@ -72,7 +72,7 @@ export default function CustomForm({ banner, setSheetOpen }: IProps) {
   useEffect(() => {
     if (productList && productList.length > 0) {
       const newArr: SelectType[] = productList.map((el) => ({
-        name: el.title,
+        name: `${el.title} (Mavjud: ${el.count})`,
         type: el.id || el.rewardId,
       }));
       setCoursesData(newArr);

@@ -13,9 +13,9 @@ export const GenerateData = async (payload: PromocodeGenerate) => {
 };
 
 export const EditData = async ({ values, id }: IMarketPromocodeEditBody) => {
-  return await http.patch(`/banner/${id}`, values);
+  return await http.patch(`/market-promocode/${id}`, values);
 };
 
 export const DeleteData = async (id: string) => {
-  return await http.delete(`/banner/${id}`);
+  return await http.delete(`/market-promocode/${id}`);
 };

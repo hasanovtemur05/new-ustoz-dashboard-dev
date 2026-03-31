@@ -1,20 +1,26 @@
 import { useQuery } from '@tanstack/react-query';
 import { get } from 'lodash';
-
 import { getDatasList } from '../adapters';
 import { GetDatasList } from '../api';
 
-export const useProductsList = (pageSize: number, page: number, id: string) => {
+export const useProductsList = (
+  pageNumber: number = 1,
+  pageSize: number = 20,
+  categoryId?: string,
+  isActiveOnGift?: boolean,
+  search?: string,
+  isActive?: boolean
+) => {
   const initialData = {
     data: getDatasList(),
-    pagenationInfo: null,
+    pagination: null,
   };
   const { data = initialData, ...args } = useQuery({
-    queryKey: ['products_list', pageSize, page, id],
-    queryFn: () => GetDatasList(pageSize, page, id),
+    queryKey: ['products_list', pageNumber, pageSize, categoryId, isActiveOnGift, search, isActive],
+    queryFn: () => GetDatasList(pageNumber, pageSize, categoryId, isActiveOnGift, search, isActive),
     select: (data) => ({
       data: getDatasList(get(data, 'data.data.data')),
-      pagenationInfo: get(data, 'data.data.meta.pagination'),
+      pagination: get(data, 'data.data.meta.pagination'),
     }),
   });
 

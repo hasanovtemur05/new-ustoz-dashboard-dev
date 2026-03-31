@@ -20,8 +20,9 @@ import {
   ChevronDown,
   PhoneCall,
   BookType,
-  Gamepad2
-  } from 'lucide-react';
+  Gamepad2,
+  MessageSquare
+} from 'lucide-react';
 import { Button } from 'components/ui/button';
 import { cn } from 'utils/styleUtils';
 import { useContext, useState } from 'react';
@@ -60,11 +61,12 @@ const routePermissions: { [key: string]: UserRole[] } = {
   '/fortuna-product': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN],
   '/fortuna-promocode': [UserRole.SUPER_ADMIN],
   '/lesson-reward': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
-  '/lesson-reward-promocode': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/add-reward-to-lessons': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
+  '/lesson-reward-box': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/survey': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
-  '/call-center': [ UserRole.CALL_CENTER],
+  '/call-center': [UserRole.CALL_CENTER],
   '/influencer': [UserRole.SUPER_ADMIN, UserRole.TOP_30_ADMIN],
+  '/suggestion-departments': [UserRole.SUPER_ADMIN],
 };
 
 const SideNav = ({ isSideNavOpen }: IProps) => {
@@ -77,6 +79,10 @@ const SideNav = ({ isSideNavOpen }: IProps) => {
       [groupId]: !prev[groupId]
     }));
   };
+
+
+
+
 
   const menuItems = [
     {
@@ -94,7 +100,7 @@ const SideNav = ({ isSideNavOpen }: IProps) => {
         { title: 'Kurs Assistant', link: '/course-assistants' },
       ]
     },
-     {
+    {
       title: 'Kitoblar',
       icon: BookType,
       link: '/books',
@@ -177,7 +183,6 @@ const SideNav = ({ isSideNavOpen }: IProps) => {
         { title: 'Promocode', link: '/promocode' },
         { title: 'Market Promocode', link: '/market-promocode' },
         { title: 'Baraban promocode', link: '/fortuna-promocode' },
-        { title: 'Darslar promocode', link: '/lesson-reward-promocode' },
         { title: 'Bottom sheet', link: '/bottom-sheet' },
       ]
     },
@@ -199,47 +204,53 @@ const SideNav = ({ isSideNavOpen }: IProps) => {
         { title: "Baraban sovg'alari", link: '/fortuna-product' },
         { title: "Darslar sovg'alari", link: '/lesson-reward' },
         { title: "Darslarga sovg'a qo'shish", link: '/add-reward-to-lessons' },
+        { title: "Darslar Boxi (Yangi)", link: '/lesson-reward-box' },
       ]
     },
-      {
+    {
       title: "So'rovnomalar",
-      icon: ShieldQuestion ,
+      icon: ShieldQuestion,
       link: '/survey',
     },
     {
       title: "Call Center",
       icon: PhoneCall,
       link: '/call-center',
+    },
+    {
+      title: "Bo'limlar (Takliflar)",
+      icon: MessageSquare,
+      link: '/suggestion-departments',
     }
   ];
 
-const hasPermission = (item: any): boolean => {
-  if (!userData?.role) return false;
+  const hasPermission = (item: any): boolean => {
+    if (!userData?.role) return false;
 
-  // 🚫 CALL_CENTER uchun bosh sahifa (/) yo‘q
-  if (userData.role === UserRole.CALL_CENTER && item.link === '/') {
+    // 🚫 CALL_CENTER uchun bosh sahifa (/) yo‘q
+    if (userData.role === UserRole.CALL_CENTER && item.link === '/') {
+      return false;
+    }
+
+    // 👑 SUPER_ADMIN hammasini ko‘radi
+    if (userData.role === UserRole.SUPER_ADMIN) {
+      return true;
+    }
+
+    // 🔗 Oddiy link
+    if (item.link) {
+      return routePermissions[item.link]?.includes(userData.role) ?? false;
+    }
+
+    // 📂 Group menu
+    if (item.items) {
+      return item.items.some((subItem: any) =>
+        routePermissions[subItem.link]?.includes(userData.role)
+      );
+    }
+
     return false;
-  }
-
-  // 👑 SUPER_ADMIN hammasini ko‘radi
-  if (userData.role === UserRole.SUPER_ADMIN) {
-    return true;
-  }
-
-  // 🔗 Oddiy link
-  if (item.link) {
-    return routePermissions[item.link]?.includes(userData.role) ?? false;
-  }
-
-  // 📂 Group menu
-  if (item.items) {
-    return item.items.some((subItem: any) =>
-      routePermissions[subItem.link]?.includes(userData.role)
-    );
-  }
-
-  return false;
-};
+  };
 
 
   const filteredMenuItems = menuItems.filter(hasPermission);
@@ -268,9 +279,8 @@ const hasPermission = (item: any): boolean => {
                   </div>
                   {isSideNavOpen && (
                     <ChevronDown
-                      className={`size-4 transition-transform ${
-                        expandedGroups[item.groupId] ? 'rotate-180' : ''
-                      }`}
+                      className={`size-4 transition-transform ${expandedGroups[item.groupId] ? 'rotate-180' : ''
+                        }`}
                     />
                   )}
                 </Button>

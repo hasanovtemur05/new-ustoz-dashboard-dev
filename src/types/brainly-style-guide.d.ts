@@ -4,5 +4,4 @@ declare module "brainly-style-guide" {
 
   // Define MathSymbol component with its expected props
   export const MathSymbol: React.FC<{ type: MathSymbolType }>;
-  // **
 }

@@ -36,6 +36,14 @@ export const createDataColumns = ({
       header: 'Miqdori',
     },
     {
+      accessorKey: 'type',
+      header: 'Turi',
+      cell: ({ row }) => {
+        const type = row.original.type;
+        return <span>{type === 'AI_ASSISTANT' ? 'AI Assistant' : 'Jismoniy'}</span>;
+      },
+    },
+    {
       accessorKey: 'isActive',
       header: 'Kategoryiya',
       cell: ({ row }) => {

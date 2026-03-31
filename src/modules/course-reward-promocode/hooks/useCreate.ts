@@ -8,7 +8,7 @@ interface IHook {
   setSheetOpen: (state: boolean) => void;
 }
 
-export const useCreateFortunaPromocode = ({ setSheetOpen }: IHook) => {
+export const useCreateCourseRewardPromocode = ({ setSheetOpen }: IHook) => {
   const { toast } = useToast();
 
   const { mutateAsync, isPending, isSuccess, isError } = useMutation({
@@ -22,6 +22,7 @@ export const useCreateFortunaPromocode = ({ setSheetOpen }: IHook) => {
         description: 'muvaffaqiyatli yaratildi.',
       });
       queryClient.invalidateQueries({ queryKey: ['reward_promocode_list'] });
+      queryClient.invalidateQueries({ queryKey: ['lesson_reward_list'] });
       setSheetOpen(false);
     },
     onError: (error: any) => {

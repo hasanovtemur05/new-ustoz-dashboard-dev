@@ -6,15 +6,11 @@ import { EditData } from '../api';
 import { queryClient } from 'services/react-query';
 import { showErrorToast } from 'utils/showErrorToast';
 
-interface IHook {
-  id?: string;
-  setSheetOpen: (state: boolean) => void;
-}
 
-export const useEditLessonReward = ({ id = '', setSheetOpen }: IHook) => {
+export const useEditLessonReward = ({ id = '' }: { id?: string }) => {
   const { toast } = useToast();
 
-  const { mutate, isPending, isSuccess, isError } = useMutation({
+  const { mutateAsync, isPending, isSuccess, isError } = useMutation({
     mutationFn: (values: LessonRewardInputType) => EditData({ values, id }),
     onSuccess: () => {
       toast({
@@ -23,13 +19,12 @@ export const useEditLessonReward = ({ id = '', setSheetOpen }: IHook) => {
         description: 'Malumot muvaffaqiyatli tahrirlandi.',
       });
       queryClient.invalidateQueries({ queryKey: ['lesson_reward_list'] });
-      setSheetOpen(false);
     },
     onError: (error: any) => showErrorToast(error),
   });
 
   return {
-    triggerEdit: mutate,
+    triggerEdit: mutateAsync,
     isPending,
     isSuccess,
     isError,

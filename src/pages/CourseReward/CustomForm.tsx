@@ -14,6 +14,8 @@ import { useCoursesList } from 'modules/courses/hooks/useCoursesList';
 import { useCourseLessonsList } from 'modules/lessons/hooks/useCourseLessonsList';
 import { Switch } from 'components/ui/switch';
 import { Button } from 'components/ui/button';
+import { UploadPromocodeFile } from 'modules/course-reward-promocode/api';
+import MediaUploadField from 'components/fields/VideoUploder';
 
 interface IProps {
   product?: LessonReward;
@@ -26,7 +28,6 @@ const typeData = [
   { type: LessonRewardType.PROMOCODE, name: 'Promocode' },
   { type: LessonRewardType.FILE, name: 'File' },
   { type: LessonRewardType.AMATEUR_CERTIFICATE, name: 'Havaskor Sertifikat' },
-  { type: LessonRewardType.PROFESSIONAL_CERTIFICATE, name: 'Professional Sertifikat' },
   { type: LessonRewardType.PROGRESSIVE_CERTIFICATE, name: 'Yuksaluvchi Sertifikat' },
 ];
 
@@ -38,14 +39,11 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
   const [state, setState] = useState(false);
   const { data: coursesList, isLoading: loadingCourses } = useCoursesList();
 
-  const { uploadFile } = useFileUploader();
+  const { uploadFile: uploadGenericFile } = useFileUploader();
 
-  const { triggerCreate } = useCreateLessonReward({
-    setSheetOpen,
-  });
+  const { triggerCreate } = useCreateLessonReward();
   const { triggerEdit, isPending: isNotificationEditPending } = useEditLessonReward({
     id: product?.id,
-    setSheetOpen,
   });
 
   const form = useForm<useFormSchemaType>({
@@ -110,22 +108,26 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
   async function onSubmit(formValues: useFormSchemaType) {
     setState(true);
     try {
-      const firstValue = await uploadFile<LessonRewardInputType>(formValues as any, 'photo');
       let payload: any = {
         ...formValues,
       };
 
-      if (firstValue.photo) {
-        payload.photo = firstValue.photo;
+      // Handle main photo
+      if (formValues.photo instanceof File) {
+        const res = await uploadGenericFile<any>(formValues, 'photo');
+        payload.photo = res.photo;
+      } else if (typeof formValues.photo === 'string') {
+        payload.photo = formValues.photo;
       } else {
         delete payload.photo;
       }
 
-      if (!payload.file) delete payload.file;
+      // Cleanup optional fields
       if (!payload.count) delete payload.count;
       if (payload.value === undefined || payload.value === '') delete payload.value;
       if (!payload.courseId) delete payload.courseId;
 
+      // Handle parts
       if (payload.isPartial && payload.parts) {
         const uploadedParts = await Promise.all(
           payload.parts.map(async (part: any) => {
@@ -133,10 +135,9 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
               title: part.title, 
               value: Number(part.value) || 0, 
               photo: '',
-              lessonId: part.lessonId
             };
             if (part.photo && part.photo instanceof File) {
-              const res = await uploadFile<any>(part, 'photo');
+              const res = await uploadGenericFile<any>(part, 'photo');
               processedPart.photo = res.photo;
             } else if (typeof part.photo === 'string') {
               processedPart.photo = part.photo;
@@ -149,13 +150,58 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
         payload.parts = [];
       }
 
-      if (product) {
-        triggerEdit(payload);
-      } else {
-        triggerCreate(payload);
+      // Handle File type
+      if (payload.type === LessonRewardType.FILE && payload.file instanceof File) {
+        const res = await uploadGenericFile<any>(payload, 'file');
+        payload.file = res.file;
+      } else if (payload.type === LessonRewardType.PROMOCODE) {
+        // Promocode file is handled separately via UploadPromocodeFile
+        delete payload.file;
+      } else if (typeof payload.file !== 'string') {
+        delete payload.file;
       }
-    } catch (error) {
-      alert('Aniqlanmagan hatolik!');
+
+      let res: any;
+      if (product) {
+        res = await triggerEdit(payload);
+      } else {
+        res = await triggerCreate(payload);
+      }
+
+      // 🎁 Handle Promocode File upload after creation/edit
+      if (formValues.type === LessonRewardType.PROMOCODE) {
+        if (!formValues.file) {
+          alert('Promocode turi tanlangan, lekin fayl biriktirilmagan!');
+          setState(false);
+          return;
+        }
+
+        // Backend response structure: { data: { id: "..." } }
+        const rewardId = product?.id || res?.data?.data?.id || res?.data?.id || res?.id;
+        
+        console.log("Qayta ishlash uchun Reward ID:", rewardId);
+        console.log("To'liq response:", res);
+
+        if (rewardId) {
+          try {
+            await UploadPromocodeFile(rewardId, formValues.file as File);
+            console.log("Fayl muvaffaqiyatli yuklandi.");
+          } catch (fileError: any) {
+            console.error('Fayl yuklashda xatolik:', fileError);
+            alert(`Mukofot yaratildi, lekin fayl yuklashda xato bo'ldi: ${fileError?.response?.data?.message || fileError.message}`);
+            return; 
+          }
+        } else {
+          console.error("Reward ID topilmadi. Response:", res);
+          alert("Xatolik: Yangi yaratilgan mukofotning ID si aniqlanmadi. Fayl yuklanmadi.");
+          return;
+        }
+      }
+
+      setSheetOpen(false);
+    } catch (error: any) {
+      console.error(error);
+      alert(error?.response?.data?.message || 'Aniqlanmagan xatolik!');
     } finally {
       setState(false);
     }
@@ -198,13 +244,6 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
               {partsFields.map((field, index) => (
                 <div key={field.id} className="flex flex-col gap-2 border bg-white dark:bg-gray-800 p-4 rounded-lg relative">
                   <TextField name={`parts.${index}.title`} label="Nomi" required />
-                  <SelectField
-                    name={`parts.${index}.lessonId`}
-                    data={lessonsData}
-                    placeholder="Darsni tanlang..."
-                    label="Darsni tanlang"
-                    required
-                  />
                   <FileField name={`parts.${index}.photo`} label="Rasm" />
                   <NumberTextField name={`parts.${index}.value`} label="Qiymati" required />
                   <Button type="button" variant="destructive" size="icon" onClick={() => remove(index)} className="absolute right-2 top-2 h-8 w-8">
@@ -212,20 +251,30 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
                   </Button>
                 </div>
               ))}
-              <Button type="button" variant="outline" onClick={() => append({ title: '', photo: '', value: 0, lessonId: '' })}>
+              <Button type="button" variant="outline" onClick={() => append({ title: '', photo: '', value: 0 })}>
                 Qism qo'shish
               </Button>
             </div>
           )}
 
-
           {type === LessonRewardType.COIN && <NumberTextField name="value" placeholder="Coin miqdori" label="Coin miqdori" required />}
 
-          {type === LessonRewardType.PROMOCODE && <NumberTextField name="count" placeholder="Promocode soni" label="Promocode soni" required />}
+          {type === LessonRewardType.PROMOCODE && (
+            <>
+              <NumberTextField name="count" placeholder="Promocode soni" label="Promocode soni" required />
+              <MediaUploadField name="file" label="Promokodlar fayli (Excel)" types={['XLS', 'XLSX', 'xls', 'xlsx']} />
+            </>
+          )}
 
-          {type === LessonRewardType.PRODUCT && <FileField name={`photo`} label={`Mahsulot rasmi `} />}
+          {(type === LessonRewardType.PRODUCT ||
+            type === LessonRewardType.AMATEUR_CERTIFICATE ||
+            type === LessonRewardType.PROGRESSIVE_CERTIFICATE) && (
+            <FileField name={`photo`} label={`Rasm`} />
+          )}
 
-          {type === LessonRewardType.FILE && <FileField name={`file`} label={`Mukofot fayli`} />}
+          {type === LessonRewardType.FILE && (
+            <MediaUploadField name={`file`} label={`Mukofot fayli`} types={['PDF', 'DOC', 'DOCX', 'XLS', 'XLSX', 'xls', 'xlsx', 'ZIP', 'RAR']} />
+          )}
 
           <RichTextEditor name="description" label="Product tarifi" />
         </div>

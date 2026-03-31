@@ -27,7 +27,6 @@ export const schema = z.object({
       title: z.string().min(1, { message: 'Nomi talab qilinadi' }),
       photo: fileType,
       value: z.union([z.number(), z.string()]).optional(),
-      lessonId: z.string().min(1, { message: 'Dars tanlanishi shart' }),
     })
   ).optional(),
 });

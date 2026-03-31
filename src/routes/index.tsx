@@ -50,6 +50,8 @@ import BooksPage from 'pages/Books/Page';
 import CourseInfluencerPage from 'pages/CourseInfluencer/Page';
 import WebGamesPage from 'pages/WebGames';
 import VerificationPage from 'pages/Verification/Page';
+import LessonRewardBoxPage from 'pages/LessonRewardBox/Page';
+import SuggestionDepartmentPage from 'pages/SuggestionDepartment/Page';
 
 const routePermissions: { [key: string]: UserRole[] } = {
   '/': [UserRole.SUPER_ADMIN, UserRole.STATISTICS_ADMIN],
@@ -86,11 +88,12 @@ const routePermissions: { [key: string]: UserRole[] } = {
   '/fortuna-product': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN],
   '/fortuna-promocode': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN],
   '/lesson-reward': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
-  '/lesson-reward-promocode': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/add-reward-to-lessons': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/survey': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/call-center': [UserRole.SUPER_ADMIN, UserRole.CALL_CENTER],
   '/web-games': [UserRole.SUPER_ADMIN],
+  '/lesson-reward-box': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
+  '/suggestion-departments': [UserRole.SUPER_ADMIN],
 };
 
 const routes = [
@@ -130,12 +133,13 @@ const routes = [
   { path: '/fortuna-product', element: <FortunaProductPage /> },
   { path: '/fortuna-promocode', element: <FortunaPromocodePage /> },
   { path: '/lesson-reward', element: <LessonRewardPage /> },
-  { path: '/lesson-reward-promocode', element: <LessonRewardPromocodePage /> },
   { path: '/add-reward-to-lessons', element: <AddRewardToLessons /> },
   { path: '/half-completed-course-users', element: <UsersHalfComplitedCoursesPage /> },
   { path: '/survey', element: <SurveyPage /> },
   { path: '/call-center', element: <CallCenterPage /> },
   { path: '/web-games', element: <WebGamesPage /> },
+  { path: '/lesson-reward-box', element: <LessonRewardBoxPage /> },
+  { path: '/suggestion-departments', element: <SuggestionDepartmentPage /> },
 ];
 
 
