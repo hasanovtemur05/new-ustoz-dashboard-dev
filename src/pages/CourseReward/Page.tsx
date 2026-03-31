@@ -11,6 +11,8 @@ import { LessonReward } from 'modules/course-reward-product/types';
 import { useLessonRewardList } from 'modules/course-reward-product/hooks/useList';
 import { useDeleteLessonReward } from 'modules/course-reward-product/hooks/useDelete';
 
+
+
 const LessonRewardPage = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isSheetOpen, setSheetOpen] = useState(false);
