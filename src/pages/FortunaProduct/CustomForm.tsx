@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from 'components/ui/form';
-import { FileField, RichTextEditor, SelectField, TextField } from 'components/fields';
+import { FileField, TextAreaField, SelectField, TextField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import useFileUploader from 'hooks/useFileUploader';
 import { useState } from 'react';
@@ -106,7 +106,7 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
 
           {type === FortunaProductType.PRODUCT && <FileField name={`photo`} label={`Mahsulot rasmi `} />}
 
-          <RichTextEditor name="content" label="Product tarifi" />
+          <TextAreaField name="content" label="Product tarifi" />
 
           <CustomSwitch
             state={switchState}

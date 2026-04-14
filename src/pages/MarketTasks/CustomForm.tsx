@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from 'components/ui/form';
-import { FileField, RichTextEditor, TextField, SelectField, DatePickerField } from 'components/fields';
+import { FileField, TextAreaField, TextField, SelectField, DatePickerField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import useFileUploader from 'hooks/useFileUploader';
 import { useState } from 'react';
@@ -103,7 +103,7 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
 
           <FileField name={`photo`} label={`Topshiriq rasmi`} />
 
-          <RichTextEditor name="description" label="Topshiriq tarifi" required />
+          <TextAreaField name="description" label="Topshiriq tarifi" required />
 
           <SelectField name="frequency" label="Chastota" placeholder="Chastota tanlang" data={FREQUENCY_OPTIONS} required />
 

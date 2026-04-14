@@ -3,7 +3,7 @@
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'components/ui/form';
-import { FileField, RichTextEditor, TextField, SelectField } from 'components/fields';
+import { FileField, TextAreaField, TextField, SelectField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import useFileUploader, { useEasyFileUploader } from 'hooks/useFileUploader';
 import { useState, useEffect } from 'react';
@@ -193,7 +193,7 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2">
         <div className="flex gap-4 flex-col my-4">
           <TextField name="title" label="Product nomi" required />
-          <RichTextEditor name="content" label="Product tarifi" required />
+          <TextAreaField name="content" label="Product tarifi" required />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
              <SelectField name="type" label="Mahsulot turi" data={PRODUCT_TYPES} required />
              {form.watch('type') === 'AI_ASSISTANT' && (

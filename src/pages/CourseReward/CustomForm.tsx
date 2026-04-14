@@ -1,7 +1,7 @@
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormField, FormItem, FormLabel, FormControl } from 'components/ui/form';
-import { FileField, RichTextEditor, SelectField, TextField } from 'components/fields';
+import { FileField, TextAreaField, SelectField, TextField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import useFileUploader from 'hooks/useFileUploader';
 import { useState, useEffect } from 'react';
@@ -276,7 +276,7 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
             <MediaUploadField name={`file`} label={`Mukofot fayli`} types={['PDF', 'DOC', 'DOCX', 'XLS', 'XLSX', 'xls', 'xlsx', 'ZIP', 'RAR']} />
           )}
 
-          <RichTextEditor name="description" label="Product tarifi" />
+          <TextAreaField name="description" label="Product tarifi" />
         </div>
         {product ? (
           <LoadingButton isLoading={isNotificationEditPending}>Tahrirlash</LoadingButton>

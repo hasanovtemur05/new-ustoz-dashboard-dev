@@ -28,6 +28,19 @@ export const createDataColumns = ({
       header: 'Nomi',
     },
     {
+      accessorKey: 'content',
+      header: 'Tavsif',
+      cell: ({ row }) => {
+        const rawContent = row.original.content || '';
+        const strippedContent = rawContent.replace(/<[^>]*>?/gm, '');
+        return (
+          <div className="text-sm truncate max-w-[200px]" title={strippedContent}>
+            {strippedContent}
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: 'price',
       header: 'Narxi',
     },
