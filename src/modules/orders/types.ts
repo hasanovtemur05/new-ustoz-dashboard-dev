@@ -20,6 +20,7 @@ interface User {
 interface IProduct {
   title: string;
   count: number;
+  type?: 'PHYSICAL' | 'AI_ASSISTANT';
 }
 export interface IOrder {
   id: string;

@@ -9,6 +9,7 @@ import { IOrder, OrderType, DonationStatus, OrdersCreateType } from 'modules/ord
 import { AlertDialog } from 'components/AlertDialog';
 import { useDeleteOrder } from 'modules/orders/hooks/useDelete';
 import SelectWithoutForm from 'components/fields/SelectWithoutForm';
+import SearchSelectWithoutForm from 'components/fields/SearchSelectWithoutForm';
 import { Input } from 'components/ui/input';
 import { Button } from 'components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from 'components/ui/sheet';
@@ -113,11 +114,11 @@ const OrdersPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
           <div>
             <label className="text-sm font-medium mb-1 block">Turi</label>
-            <SelectWithoutForm data={typeData} placeholder="Turi bo'yicha..." onChange={(value) => setOrderType(value)} />
+            <SearchSelectWithoutForm data={typeData} placeholder="Turi bo'yicha..." onChange={(value) => setOrderType(value)} />
           </div>
           <div>
             <label className="text-sm font-medium mb-1 block">Status</label>
-            <SelectWithoutForm data={statusData} placeholder="Status bo'yicha..." onChange={(value) => setStatus(value)} />
+            <SearchSelectWithoutForm data={statusData} placeholder="Status bo'yicha..." onChange={(value) => setStatus(value)} />
           </div>
           <div>
             <label className="text-sm font-medium mb-1 block">Ism</label>

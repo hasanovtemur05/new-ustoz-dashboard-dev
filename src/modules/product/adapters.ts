@@ -15,6 +15,8 @@ export const getData = (item?: ProductType) => {
     isActive: item?.isActive ?? false,
     workingHours: item?.workingHours ?? [],
     createdAt: item?.createdAt ?? "",
+    type: item?.type ?? "PHYSICAL",
+    openAiAssistantId: item?.openAiAssistantId ?? "",
   };
 };
 

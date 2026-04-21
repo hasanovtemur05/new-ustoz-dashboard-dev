@@ -11,6 +11,7 @@ import { useDeleteBox } from 'modules/lesson-reward-box/hooks/useDelete';
 import { ILessonRewardBox } from 'modules/lesson-reward-box/types';
 import { useCoursesList } from 'modules/courses/hooks/useCoursesList';
 import SelectWithoutForm from 'components/fields/SelectWithoutForm';
+import SearchSelectWithoutForm from 'components/fields/SearchSelectWithoutForm';
 import { Button } from 'components/ui/button';
 import { useSearchParams } from 'react-router-dom';
 
@@ -60,15 +61,16 @@ const LessonRewardBoxPage = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <SelectWithoutForm 
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center gap-4">
+          <SearchSelectWithoutForm 
             data={courses} 
             placeholder="Kursni tanlang" 
             value={selectedCourseId}
             onChange={handleCourseChange} 
+            className="w-[280px]"
           />
-          <h2 className="font-bold text-2xl">Dars Mukofoti Boxlar</h2>
+          <h2 className="font-bold text-2xl whitespace-nowrap">Dars Mukofoti Boxlar</h2>
         </div>
 
         <Button onClick={() => { setSelectedBox(undefined); setSheetOpen(true); }}>

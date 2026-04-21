@@ -6,12 +6,12 @@ import { Form, FormDescription, FormMessage } from 'components/ui/form';
 import LoadingButton from 'components/LoadingButton';
 import QuizOptions from './QuizOptions';
 import { useParams } from 'react-router-dom';
-import RichTextEditorForQuiz from 'components/fields/RichTextEditorForQuiz';
 import http from 'services/api';
 import { useEffect, useState } from 'react';
 import { BattleQuiz } from 'modules/battle-question/types';
 import { useCreateBattleQuiz } from 'modules/battle-question/hooks/useCreateQuiz';
 import { useEditBattleQuiz } from 'modules/battle-question/hooks/useEditQuiz';
+import { TextAreaField } from 'components/fields';
 
 const quizSchema = z.object({
   question: z.string().min(9, { message: 'Savol minimum 8 ta harifdan iborat bolishi karak' }),
@@ -123,7 +123,7 @@ export default function QuizForm({ quiz, setSheetOpen }: IProps) {
       >
         <div className="flex gap-4 flex-col my-4">
           {/* <TextAreaField name={`question`} label="Savol" required /> */}
-          <RichTextEditorForQuiz name="question" label="Savol" required />
+          <TextAreaField name="question" label="Savol" required />
           <hr />
           <FormDescription className="mb-2 text-xs">Bitta to'g'ri javobni belgilang</FormDescription>
           {loading && <h3>Javoblar yuklanmoqda... </h3>}

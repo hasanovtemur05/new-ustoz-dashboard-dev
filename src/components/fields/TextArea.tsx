@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import {
   FormControl,
@@ -7,6 +8,7 @@ import {
   FormMessage,
 } from 'components/ui/form';
 import { Textarea } from 'components/ui/textarea';
+import { stripHtml } from 'utils/stripHtml';
 
 interface IProps {
   name: string;
@@ -21,7 +23,15 @@ export default function TextAreaField({
   name,
   label,
 }: IProps) {
-  const { control } = useFormContext();
+  const { control, setValue, watch } = useFormContext();
+  const fieldValue = watch(name);
+
+  // Dastlabki qiymatda HTML teglar bo'lsa, ularni tozalab qo'yamiz
+  useEffect(() => {
+    if (fieldValue && typeof fieldValue === 'string' && /<[^>]*>?/gm.test(fieldValue)) {
+      setValue(name, stripHtml(fieldValue), { shouldDirty: false });
+    }
+  }, [fieldValue, name, setValue]);
 
   return (
     <FormField
@@ -38,7 +48,12 @@ export default function TextAreaField({
             </FormLabel>
           )}
           <FormControl>
-            <Textarea {...field} placeholder={placeholder} />
+            <Textarea
+              {...field}
+              value={stripHtml(field.value || '')}
+              onChange={(e) => field.onChange(stripHtml(e.target.value))}
+              placeholder={placeholder}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>

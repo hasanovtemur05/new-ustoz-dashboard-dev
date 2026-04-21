@@ -7,7 +7,7 @@ import { ThemeProvider } from 'providers/ThemeProvider';
 import { AuthProvider } from 'providers/auth';
 import { UserProvider } from 'providers/UserProvider';
 
-
+ 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>

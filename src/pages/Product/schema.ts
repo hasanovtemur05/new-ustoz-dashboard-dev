@@ -27,7 +27,7 @@ export const baseSchema = z.object({
   isActiveOnGift: z.boolean().optional(),
   categoryId: z.string().uuid({ message: "Kategoriya tanlash shart" }),
   workingHours: z.array(workingHourSchema).optional(),
-  type: z.enum(['PHYSICAL', 'AI_ASSISTANT']).default('PHYSICAL'),
+  type: z.enum(['PHYSICAL', 'AI_ASSISTANT', 'PROMOCODE']).default('PHYSICAL'),
   openAiAssistantId: z.string().optional(),
 })
 

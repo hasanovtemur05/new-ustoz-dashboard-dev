@@ -8,7 +8,7 @@ import {
   FormMessage,
 } from 'components/ui/form';
 import { X as CloseIcon, FileText } from 'lucide-react';
-import normalizeFileUrl from 'utils/normalizeFileUrl';
+import { baseMediaUrl } from 'services/api';
 import calculateFileSize from 'utils/calculateFileSize';
 
 interface IProps {
@@ -68,7 +68,7 @@ export default function FileField({
                           src={
                             typeof value === 'string' ||
                             typeof value?.url === 'string'
-                              ? normalizeFileUrl(value) : value?.id  ?normalizeFileUrl(value?.photo)
+                              ? `${baseMediaUrl}/${value}` : value?.id  ?`${baseMediaUrl}/${value?.photo}`
                               : URL.createObjectURL(value)
                           }
                           alt="preview"

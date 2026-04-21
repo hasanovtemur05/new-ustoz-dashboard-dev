@@ -26,6 +26,18 @@ export const createDataColumns = ({ getRowData, setSheetOpen, setDialogOpen, cur
     },
   },
   {
+    accessorKey: 'product.type',
+    header: 'Turi',
+    cell: ({ row }) => {
+      const type = row.original?.product?.type;
+      return (
+        <span className={`px-2 py-1 rounded text-xs font-semibold ${type === 'AI_ASSISTANT' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
+          {type === 'AI_ASSISTANT' ? 'AI' : 'Jismoniy'}
+        </span>
+      );
+    },
+  },
+  {
     accessorKey: 'price',
     header: 'Narxi',
   },

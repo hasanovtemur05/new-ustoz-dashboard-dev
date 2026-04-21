@@ -11,6 +11,7 @@ import { useDeleteCourseReward } from 'modules/add-reward-to-lessons/hooks/useDe
 import { ICourseReward } from 'modules/add-reward-to-lessons/types';
 import { useCoursesList } from 'modules/courses/hooks/useCoursesList';
 import SelectWithoutForm from 'components/fields/SelectWithoutForm';
+import SearchSelectWithoutForm from 'components/fields/SearchSelectWithoutForm';
 import { Button } from 'components/ui/button';
 import { CustomSelectType } from 'pages/UsersCertificates/Page';
 import { useSearchParams } from 'react-router-dom';
@@ -79,7 +80,7 @@ const AddRewardToLessons = () => {
     <div>
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-3">
-          <SelectWithoutForm data={courses} placeholder="Kursni  bo'yicha..." onChange={handleCourseChange} />
+          <SearchSelectWithoutForm data={courses} placeholder="Kursni  bo'yicha..." onChange={handleCourseChange} className="w-[250px]" />
         </div>
         {course && <h2 className="font-bold text-2xl"> {course?.name} sovg'alari </h2>}
 

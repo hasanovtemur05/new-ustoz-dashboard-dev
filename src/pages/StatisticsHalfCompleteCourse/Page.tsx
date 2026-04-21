@@ -9,6 +9,7 @@ import { useCoursesList } from 'modules/courses/hooks/useCoursesList';
 import regions from '../../db/regions.json';
 import districtData from '../../db/districts.json';
 import SelectWithoutForm from 'components/fields/SelectWithoutForm';
+import SearchSelectWithoutForm from 'components/fields/SearchSelectWithoutForm';
 import { useUserByHalfCourse } from 'modules/statistic-half-complete-course/hooks/useList';
 import { IUserHalfCompleteCourse } from 'modules/statistic-half-complete-course/types';
 import { DateRange } from 'react-day-picker';
@@ -70,13 +71,14 @@ const UsersHalfComplitedCoursesPage = () => {
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-3">
           <h2>Jami {pagenationInfo?.count || 0} ta </h2>
-          <SelectWithoutForm data={courses} placeholder="Kursni  bo'yicha..." onChange={(value) => setCourse(value)} />
-          <SelectWithoutForm data={regions} placeholder="Viloyatlar  bo'yicha..." onChange={(value) => setRegion(value)} isTitleKey={true} />
-          <SelectWithoutForm
+          <SearchSelectWithoutForm data={courses} placeholder="Kursni  bo'yicha..." onChange={(value) => setCourse(value)} className="w-[200px]" />
+          <SearchSelectWithoutForm data={regions} placeholder="Viloyatlar  bo'yicha..." onChange={(value) => setRegion(value)} isTitleKey={true} className="w-[200px]" />
+          <SearchSelectWithoutForm
             data={districts}
             placeholder="Tuman/shahar bo'yicha..."
             onChange={(value) => setDistrict(value)}
             isTitleKey={true}
+            className="w-[220px]"
           />
           <DateRangePicker date={date} setDate={setDate} />
         </div>

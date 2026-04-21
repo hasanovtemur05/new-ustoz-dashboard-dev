@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from 'components/ui/form';
-import { FileField, SelectField, TextField, RichTextEditor } from 'components/fields';
+import { FileField, SelectField, TextField, TextAreaField, SearchSelectField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import { boxSchema, BoxFormValues } from './schema';
 import { useCreateBox } from 'modules/lesson-reward-box/hooks/useCreate';
@@ -76,11 +76,11 @@ export default function CustomForm({ box, setSheetOpen, courseId }: IProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <SelectField name="courseId" data={courseData} label="Kurs" placeholder="Kursni tanlang" required />
-        <SelectField name="lessonId" data={lessonData} label="Dars" placeholder="Darsni tanlang" required />
+        <SearchSelectField name="courseId" data={courseData} label="Kurs" placeholder="Kursni tanlang" required />
+        <SearchSelectField name="lessonId" data={lessonData} label="Dars" placeholder="Darsni tanlang" required />
         <TextField name="title" label="Sarlavha" required />
         <FileField name="image" label="Rasm" required />
-        <RichTextEditor name="description" label="Tavsif" />
+        <TextAreaField name="description" label="Tavsif" />
         <LoadingButton isLoading={isCreating || isEditing}>
           {box ? 'Saqlash' : 'Yaratish'}
         </LoadingButton>

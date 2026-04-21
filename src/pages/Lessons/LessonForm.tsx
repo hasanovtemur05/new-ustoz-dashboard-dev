@@ -10,7 +10,7 @@ import { useCreateLesson } from 'modules/lessons/hooks/useCreateLesson';
 import { useEditLesson } from 'modules/lessons/hooks/useEditLesson';
 import { Form } from 'components/ui/form';
 import { Lesson, LessonLinkType } from 'modules/lessons/types';
-import { RichTextEditor, SelectField, TextField, TimePickerField } from 'components/fields';
+import { SelectField, TextAreaField, TextField, TimePickerField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import { convertSecondsToHMS } from 'utils/timeConverter';
 import CustomSwitch from 'components/SwitchIsDreft';
@@ -237,7 +237,7 @@ export default function LessonForm({ lesson, lastDataOrder: lastLessonOrder, set
             </div>
           </div>
 
-          <RichTextEditor name="description" label="Dars tavsifi" required />
+          <TextAreaField name="description" label="Dars tavsifi" required />
         </div>
 
         <LoadingButton isLoading={isLoading || isLessonCreatePending || isLessonEditPending}>

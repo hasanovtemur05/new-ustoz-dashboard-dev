@@ -52,6 +52,7 @@ import WebGamesPage from 'pages/WebGames';
 import VerificationPage from 'pages/Verification/Page';
 import LessonRewardBoxPage from 'pages/LessonRewardBox/Page';
 import SuggestionDepartmentPage from 'pages/SuggestionDepartment/Page';
+import HolidaysPage from 'pages/Holidays/Page';
 
 const routePermissions: { [key: string]: UserRole[] } = {
   '/': [UserRole.SUPER_ADMIN, UserRole.STATISTICS_ADMIN],
@@ -94,6 +95,7 @@ const routePermissions: { [key: string]: UserRole[] } = {
   '/web-games': [UserRole.SUPER_ADMIN],
   '/lesson-reward-box': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/suggestion-departments': [UserRole.SUPER_ADMIN],
+  '/holidays': [UserRole.SUPER_ADMIN],
 };
 
 const routes = [
@@ -140,6 +142,7 @@ const routes = [
   { path: '/web-games', element: <WebGamesPage /> },
   { path: '/lesson-reward-box', element: <LessonRewardBoxPage /> },
   { path: '/suggestion-departments', element: <SuggestionDepartmentPage /> },
+  { path: '/holidays', element: <HolidaysPage /> },
 ];
 
 

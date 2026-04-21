@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from 'components/ui/form';
-import { RichTextEditor, SelectField, TextField } from 'components/fields';
+import { SelectField, TextField, TextAreaField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import NumberTextField from 'components/fields/Number';
 import KeywordField from 'components/fields/KeywordField';
@@ -102,7 +102,7 @@ export default function CourseForm({ vacancy, setSheetOpen }: IProps) {
             </div>
           </div>
 
-          <RichTextEditor name="description" label="Vakansiya Tarifi " required />
+          <TextAreaField name="description" label="Vakansiya Tarifi " required />
           <KeywordField name="skills" label="Talab qilinadigan skillar" placeholder="React.js" required />
         </div>
         {vacancy ? (

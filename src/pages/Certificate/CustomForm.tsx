@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from 'components/ui/form';
-import { FileField, SelectField } from 'components/fields';
+import { FileField, SelectField, SearchSelectField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import useFileUploader from 'hooks/useFileUploader';
 import { useCoursesList } from 'modules/courses/hooks/useCoursesList';
@@ -109,14 +109,14 @@ export default function CustomForm({ certificate, setSheetOpen }: IProps) {
           )}
 
           {loadingCourses && !certificate ? (
-            <SelectField
+            <SearchSelectField
               name="courseId"
               data={[{ name: "Loading...", type: "loading" }]}
               placeholder="Kurslar yuklanmoqda..."
               label="Kurslar"
             />
           ) : (
-            <SelectField
+            <SearchSelectField
               name="courseId"
               data={coursesData}
               placeholder="Kursni tanlang..."

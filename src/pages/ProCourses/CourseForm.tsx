@@ -6,7 +6,7 @@ import useFileUploader from 'hooks/useFileUploader';
 import { useCreateCourse } from 'modules/courses/hooks/useCreateCourse';
 import { useEditCourse } from 'modules/courses/hooks/useEditCourse';
 import { Form } from 'components/ui/form';
-import { FileField, RichTextEditor, SelectField, TextAreaField, TextField } from 'components/fields';
+import { FileField, SelectField, TextAreaField, TextField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import NumberTextField from 'components/fields/Number';
 import KeywordField from 'components/fields/KeywordField';
@@ -146,7 +146,7 @@ export default function CourseForm({ course, setSheetOpen }: IProps) {
           <SelectField name="degree" data={levelData} placeholder="Kurs darajasini tanlang..." label="Kurs darajasi" />
           <SelectField name="teacherId" data={teachersData} placeholder="Kurs Ustozini tanlang..." label="Kurs Ustozi" />
           <NumberTextField name="planLessonCount" placeholder="Rejalashtirilgan darslar soni" label="Rejalashtirilgan darslar soni" required />
-          <RichTextEditor name="description" label="Dars tavsifi" required />
+          <TextAreaField name="description" label="Dars tavsifi" required />
           <FileField name="icon" label="Icon rasmi" required />
           <FileField name="banner" label="Banner rasmi" required />
           <hr />

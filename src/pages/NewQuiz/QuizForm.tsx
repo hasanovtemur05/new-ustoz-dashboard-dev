@@ -9,14 +9,13 @@ import LoadingButton from 'components/LoadingButton';
 import QuizOptions from './QuizOptions';
 import { useParams } from 'react-router-dom';
 
-import RichTextEditorForQuiz from 'components/fields/RichTextEditorForQuiz';
 import { useCreateQuiz } from 'modules/quizzes/hooks/useCreateQuiz';
 import { useEditQuiz } from 'modules/quizzes/hooks/useEditQuiz';
 
 import { useEffect, useState } from 'react';
 import http from 'services/api';
 import { Quiz, QuizOptionType } from 'modules/quizzes/types';
-import { SelectField } from 'components/fields';
+import { SelectField, TextAreaField } from 'components/fields';
 import { useEasyFileUploader } from 'hooks/useFileUploader';
 
 const typeData = [
@@ -132,7 +131,7 @@ export default function QuizForm({ quiz, setSheetOpen }: IProps) {
         className="flex flex-col gap-2"
       >
         <div className="flex gap-4 flex-col my-4">
-          <RichTextEditorForQuiz name="question" label="Savol" required />
+          <TextAreaField name="question" label="Savol" required />
           <SelectField name="type" data={typeData} placeholder="Javob turini tanlang..." label="Javob turi" />
           <hr />
           <FormDescription className="mb-2 text-xs">Bitta to'g'ri javobni belgilang</FormDescription>

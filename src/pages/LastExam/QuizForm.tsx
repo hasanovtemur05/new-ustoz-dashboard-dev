@@ -9,7 +9,7 @@ import QuizOptions from './QuizOptions';
 import { useParams } from 'react-router-dom';
 import { useCreateQuiz } from 'modules/lastexam/hooks/useCreateQuiz';
 import { useEditQuiz } from 'modules/lastexam/hooks/useEditQuiz';
-import RichTextEditorForQuiz from 'components/fields/RichTextEditorForQuiz';
+import { TextAreaField } from 'components/fields';
 import http from 'services/api';
 import { useEffect, useState } from 'react';
 
@@ -127,7 +127,7 @@ export default function QuizForm({ quiz, setSheetOpen }: IProps) {
       >
         <div className="flex gap-4 flex-col my-4">
           {/* <TextAreaField name={`question`} label="Savol" required /> */}
-          <RichTextEditorForQuiz name="question" label="Savol" required />
+          <TextAreaField name="question" label="Savol" required />
           <hr />
           <FormDescription className="mb-2 text-xs">Bitta to'g'ri javobni belgilang</FormDescription>
           {loading && <h3>Javoblar yuklanmoqda... </h3>}

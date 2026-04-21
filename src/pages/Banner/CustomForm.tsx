@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from 'components/ui/form';
-import { FileField, SelectField, TextField } from 'components/fields';
+import { FileField, SelectField, TextField, SearchSelectField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import useFileUploader from 'hooks/useFileUploader';
 import { useEffect, useState } from 'react';
@@ -120,7 +120,7 @@ export default function CustomForm({ banner, setSheetOpen }: IProps) {
 
           {(type === BannerType.COURSE || (banner && banner?.objectId)) &&
             (coursesData?.length ? (
-              <SelectField name="objectId" key="objectId" data={coursesData} placeholder="Kursni  tanlang..." label="Kursni  tanglang" />
+              <SearchSelectField name="objectId" key="objectId" data={coursesData} placeholder="Kursni  tanlang..." label="Kursni  tanglang" />
             ) : (
               'no courses'
             ))}

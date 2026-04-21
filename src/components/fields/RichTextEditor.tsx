@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 import {
   FormControl,
   FormField,
@@ -5,9 +7,8 @@ import {
   FormLabel,
   FormMessage,
 } from 'components/ui/form';
-import { useFormContext } from 'react-hook-form';
-import QuillEditor from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import { Textarea } from 'components/ui/textarea';
+import { stripHtml } from 'utils/stripHtml';
 
 interface IProps {
   name: string;
@@ -17,36 +18,20 @@ interface IProps {
 }
 
 export default function RichTextEditor({
+  placeholder,
+  required,
   name,
   label,
-  required,
-  placeholder,
 }: IProps) {
-  const { control } = useFormContext();
+  const { control, setValue, watch } = useFormContext();
+  const fieldValue = watch(name);
 
-  const formats = [
-    'header',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'link',
-  ];
-  const modules = {
-    toolbar: {
-      container: [
-        [{ header: [1, 2, 3, 4, false] }],
-        ['bold', 'italic', 'underline', 'blockquote'],
-        [{ list: 'ordered' }, { list: 'bullet' }, 'link'],
-      ],
-    },
-    clipboard: {
-      matchVisual: true,
-    },
-  };
+  // Dastlabki qiymatda HTML teglar bo'lsa, ularni tozalab qo'yamiz
+  useEffect(() => {
+    if (fieldValue && typeof fieldValue === 'string' && /<[^>]*>?/gm.test(fieldValue)) {
+      setValue(name, stripHtml(fieldValue), { shouldDirty: false });
+    }
+  }, [fieldValue, name, setValue]);
 
   return (
     <FormField
@@ -63,13 +48,12 @@ export default function RichTextEditor({
             </FormLabel>
           )}
           <FormControl>
-            <QuillEditor
-              theme="snow"
-              value={field.value}
-              onChange={field.onChange}
-              formats={formats}
-              modules={modules}
+            <Textarea
+              {...field}
+              value={stripHtml(field.value || '')}
+              onChange={(e) => field.onChange(stripHtml(e.target.value))}
               placeholder={placeholder}
+              className="min-h-[120px]"
             />
           </FormControl>
           <FormMessage />

@@ -21,7 +21,8 @@ import {
   PhoneCall,
   BookType,
   Gamepad2,
-  MessageSquare
+  MessageSquare,
+  PartyPopper
 } from 'lucide-react';
 import { Button } from 'components/ui/button';
 import { cn } from 'utils/styleUtils';
@@ -67,6 +68,7 @@ const routePermissions: { [key: string]: UserRole[] } = {
   '/call-center': [UserRole.CALL_CENTER],
   '/influencer': [UserRole.SUPER_ADMIN, UserRole.TOP_30_ADMIN],
   '/suggestion-departments': [UserRole.SUPER_ADMIN],
+  '/holidays': [UserRole.SUPER_ADMIN],
 };
 
 const SideNav = ({ isSideNavOpen }: IProps) => {
@@ -213,6 +215,11 @@ const SideNav = ({ isSideNavOpen }: IProps) => {
       link: '/survey',
     },
     {
+      title: "Bayramlar",
+      icon: PartyPopper,
+      link: '/holidays',
+    },
+    {
       title: "Call Center",
       icon: PhoneCall,
       link: '/call-center',
@@ -221,7 +228,8 @@ const SideNav = ({ isSideNavOpen }: IProps) => {
       title: "Bo'limlar (Takliflar)",
       icon: MessageSquare,
       link: '/suggestion-departments',
-    }
+    },
+    
   ];
 
   const hasPermission = (item: any): boolean => {

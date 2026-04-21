@@ -53,12 +53,14 @@ export const createDataColumns = ({
       header: 'Turi',
       cell: ({ row }) => {
         const type = row.original.type;
-        return <span>{type === 'AI_ASSISTANT' ? 'AI Assistant' : 'Jismoniy'}</span>;
+        if (type === 'AI_ASSISTANT') return <span>AI Assistant</span>;
+        if (type === 'PROMOCODE') return <span>Promocode</span>;
+        return <span>Jismoniy</span>;
       },
     },
     {
       accessorKey: 'isActive',
-      header: 'Kategoryiya',
+      header: 'Status',
       cell: ({ row }) => {
         const isActive: boolean = row.getValue('isActive') || false
         return <>

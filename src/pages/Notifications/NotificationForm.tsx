@@ -6,7 +6,7 @@ import { Notification, NotificationInput } from 'modules/notifications/types';
 import { useCreateNotification } from 'modules/notifications/hooks/useCreateNotification';
 import { useEditNotification } from 'modules/notifications/hooks/useEditNotification';
 import { Form } from 'components/ui/form';
-import { FileField, TextField, RichTextEditor, TextAreaField, SelectField } from 'components/fields';
+import { FileField, TextField, TextAreaField, SelectField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import useFileUploader from 'hooks/useFileUploader';
 import { BannerType } from 'modules/banner/types';
@@ -108,7 +108,7 @@ export default function NotificationForm({ notification, setSheetOpen }: IProps)
         <div className="flex gap-4 flex-col my-4">
           <TextField name="title" label="Bildirishnoma nomi" required />
           <TextAreaField name="body" label="Bildirishnoma matni" required />
-          <RichTextEditor name="content" label="Bildirishnoma kontenti(batavsil)" required />
+          <TextAreaField name="content" label="Bildirishnoma kontenti(batavsil)" required />
           <FileField name="photo" label="Bildirishnoma rasmi" />
 
           <SelectField name="type" data={bannerTypeData} placeholder="Notification turini tanlang..." label="Notification turini tanlang" />

@@ -3,7 +3,7 @@
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'components/ui/form';
-import { FileField, TextAreaField, TextField, SelectField } from 'components/fields';
+import { FileField, RichTextEditor, TextField, SelectField, TextAreaField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import useFileUploader, { useEasyFileUploader } from 'hooks/useFileUploader';
 import { useState, useEffect } from 'react';
@@ -31,6 +31,7 @@ const DAYS = [
 const PRODUCT_TYPES = [
   { name: 'Jismoniy mahsulot', type: 'PHYSICAL' },
   { name: 'AI Assistant', type: 'AI_ASSISTANT' },
+  { name: 'Promocode', type: 'PROMOCODE' },
 ];
 
 interface IProps {
@@ -171,7 +172,7 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
         categoryId: categoryId || formValues.categoryId,
         isActive: switchState,
         isActiveOnGift: giftState,
-        workingHours: formValues.workingHours,
+        workingHours: (formValues.type === 'AI_ASSISTANT' || formValues.type === 'PROMOCODE') ? [] : formValues.workingHours,
         type: formValues.type,
         openAiAssistantId: formValues.type === 'AI_ASSISTANT' ? formValues.openAiAssistantId : undefined,
       };
@@ -195,16 +196,16 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
           <TextField name="title" label="Product nomi" required />
           <TextAreaField name="content" label="Product tarifi" required />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-             <SelectField name="type" label="Mahsulot turi" data={PRODUCT_TYPES} required />
-             {form.watch('type') === 'AI_ASSISTANT' && (
-               <TextField name="openAiAssistantId" label="OpenAI Assistant ID" placeholder="asst_..." required />
-             )}
+            <SelectField name="type" label="Mahsulot turi" data={PRODUCT_TYPES} required />
+            {form.watch('type') === 'AI_ASSISTANT' && (
+              <TextField name="openAiAssistantId" label="OpenAI Assistant ID" placeholder="asst_..." required />
+            )}
           </div>
           <NumberTextField name="price" placeholder="Narxni kiriting (Coin)" label="Narxni kiriting (Coin)" required />
           <NumberTextField name="cashPrice" placeholder="So'mda narxi (Ixtiyoriy)" label="So'mda narxi (Ixtiyoriy)" />
           <FileField name="photo" label="Asosiy mahsulot rasmi" />
           <NumberTextField name="count" placeholder="Mahsulot soni" label="Mahsulot soni" required />
-          
+
           <div className="flex flex-col gap-4">
             <CustomSwitch
               state={switchState}
@@ -219,73 +220,75 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
           </div>
 
           {/* Working Hours bo'limi */}
-          <div className="flex gap-2 flex-col border p-4 rounded-md">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-medium">Ish vaqti (Olib ketish uchun)</h3>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => append({ day: 'MONDAY', open: '09:00', close: '18:00' })}
-                className="flex items-center gap-2 bg-transparent"
-              >
-                <Plus size={16} />
-                Vaqt qo'shish
-              </Button>
-            </div>
-
-            {fields.map((field, index) => (
-              <div key={field.id} className="flex items-end gap-2 border-b pb-2">
-                <div className="flex-1">
-                  <SelectField
-                    name={`workingHours.${index}.day`}
-                    label="Kun"
-                    data={DAYS}
-                    required
-                  />
-                </div>
-                <div className="flex-1">
-                  <FormField
-                    control={form.control}
-                    name={`workingHours.${index}.open`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Ochilish</FormLabel>
-                        <FormControl>
-                          <Input type="time" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="flex-1">
-                  <FormField
-                    control={form.control}
-                    name={`workingHours.${index}.close`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Yopilish</FormLabel>
-                        <FormControl>
-                          <Input type="time" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+          {form.watch('type') !== 'AI_ASSISTANT' && form.watch('type') !== 'PROMOCODE' && (
+            <div className="flex gap-2 flex-col border p-4 rounded-md">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-medium">Ish vaqti (Olib ketish uchun)</h3>
                 <Button
                   type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => remove(index)}
-                  className="text-red-500"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => append({ day: 'MONDAY', open: '09:00', close: '18:00' })}
+                  className="flex items-center gap-2 bg-transparent"
                 >
-                  <Trash2 size={18} />
+                  <Plus size={16} />
+                  Vaqt qo'shish
                 </Button>
               </div>
-            ))}
-          </div>
+
+              {fields.map((field, index) => (
+                <div key={field.id} className="flex items-end gap-2 border-b pb-2">
+                  <div className="flex-1">
+                    <SelectField
+                      name={`workingHours.${index}.day`}
+                      label="Kun"
+                      data={DAYS}
+                      required
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <FormField
+                      control={form.control}
+                      name={`workingHours.${index}.open`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Ochilish</FormLabel>
+                          <FormControl>
+                            <Input type="time" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <FormField
+                      control={form.control}
+                      name={`workingHours.${index}.close`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Yopilish</FormLabel>
+                          <FormControl>
+                            <Input type="time" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => remove(index)}
+                    className="text-red-500"
+                  >
+                    <Trash2 size={18} />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Photos bo'limi */}
           <div className="flex gap-2 flex-col border p-4 rounded-md">

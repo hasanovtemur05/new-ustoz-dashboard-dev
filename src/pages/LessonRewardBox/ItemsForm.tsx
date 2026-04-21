@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from 'components/ui/form';
-import { SelectField } from 'components/fields';
+import { SelectField, SearchSelectField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import { Button } from 'components/ui/button';
 import { Trash2, Upload, FileUp } from 'lucide-react';
@@ -61,7 +61,7 @@ export default function ItemsForm({ box }: IProps) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-end gap-2 border p-4 rounded-lg bg-gray-50 dark:bg-gray-900">
           <div className="flex-1 flex gap-2">
-            <SelectField name="rewardId" data={rewardData} label="Mukofot" placeholder="Tanlang" required />
+            <SearchSelectField name="rewardId" data={rewardData} label="Mukofot" placeholder="Tanlang" required />
             {partData.length > 0 && (
               <SelectField name="partId" data={partData} label="Qism" placeholder="Tanlang" />
             )}

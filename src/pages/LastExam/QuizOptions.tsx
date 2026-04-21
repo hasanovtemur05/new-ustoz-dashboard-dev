@@ -2,7 +2,7 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import { FormControl, FormField, FormItem, FormMessage } from 'components/ui/form';
 import { RadioGroup, RadioGroupItem } from 'components/ui/radio-group';
 import { quizFormSchema } from './QuizForm';
-import RichTextEditorForQuiz from 'components/fields/RichTextEditorForQuiz';
+import { TextField } from 'components/fields';
 
 export default function QuizOptions() {
   const { control, setValue } = useFormContext<quizFormSchema>();
@@ -36,7 +36,7 @@ export default function QuizOptions() {
                   name={`options.${valuesIndex}.value`}
                   placeholder="Javob matni..."
                 /> */}
-                <RichTextEditorForQuiz name={`options.${valuesIndex}.value`} label={`Javob ${valuesIndex + 1}`} />
+                <TextField name={`options.${valuesIndex}.value`} label={`Javob ${valuesIndex + 1}`} />
               </div>
               <FormMessage />
             </FormItem>

@@ -8,9 +8,8 @@ import { useCreateNews } from 'modules/news/hooks/useCreateNews';
 import { useEditNews } from 'modules/news/hooks/useEditNews';
 import { useCreateNotification } from 'modules/notifications/hooks/useCreateNotification';
 import { Form } from 'components/ui/form';
-import { FileField, TextField } from 'components/fields';
+import { FileField, TextField, TextAreaField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
-import { RichTextEditor } from 'components/fields';
 
 const newsSchema = z.object({
   title: z.string().min(3, { message: 'Yanglik nomi talab qilinadi' }),
@@ -74,7 +73,7 @@ export default function NewsForm({ news, setSheetOpen }: IProps) {
           <div className="flex gap-4 flex-col my-4">
             <TextField name="title" label="Yangilik nomi" required />
 
-            <RichTextEditor name="content" label="Yangilik tavsifi" required />
+            <TextAreaField name="content" label="Yangilik tavsifi" required />
             <FileField name="photo" label="Yangilik rasmi" required />
           </div>
           {news ? <LoadingButton isLoading={loading}>Tahrirlash</LoadingButton> : <LoadingButton isLoading={loading}>Saqlash</LoadingButton>}

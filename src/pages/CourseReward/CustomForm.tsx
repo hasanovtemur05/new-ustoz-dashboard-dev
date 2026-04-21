@@ -1,7 +1,7 @@
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormField, FormItem, FormLabel, FormControl } from 'components/ui/form';
-import { FileField, TextAreaField, SelectField, TextField } from 'components/fields';
+import { FileField, TextAreaField, SelectField, TextField, SearchSelectField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import useFileUploader from 'hooks/useFileUploader';
 import { useState, useEffect } from 'react';
@@ -218,9 +218,9 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
           <SelectField name="type" data={typeData} placeholder="Sovg'a turini tanlang..." label="Sovg'a turini tanglang" required />
 
           {loadingCourses ? (
-            <SelectField name="courseId" data={[]} placeholder="Kurslar hali yuklanmagan..." label="Kurslar hali yuklanmagan" />
+            <SearchSelectField name="courseId" data={[]} placeholder="Kurslar hali yuklanmagan..." label="Kurslar hali yuklanmagan" />
           ) : (
-            <SelectField name="courseId" data={coursesData} placeholder="Kursni tanlang..." label="Kursni tanglang" />
+            <SearchSelectField name="courseId" data={coursesData} placeholder="Kursni tanlang..." label="Kursni tanglang" />
           )}
 
           <FormField
