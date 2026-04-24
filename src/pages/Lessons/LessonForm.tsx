@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreateLesson } from 'modules/lessons/hooks/useCreateLesson';
 import { useEditLesson } from 'modules/lessons/hooks/useEditLesson';
 import { Form } from 'components/ui/form';
-import { Lesson, LessonLinkType } from 'modules/lessons/types';
+import { Lesson, LessonLinkType, LessonVideoFormat } from 'modules/lessons/types';
 import { SelectField, TextAreaField, TextField, TimePickerField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import { convertSecondsToHMS } from 'utils/timeConverter';
@@ -28,6 +28,7 @@ const lessonSchema = z.object({
   _duration: z.date().optional(),
   isSoon: z.boolean().optional(),
   linkType: z.nativeEnum(LessonLinkType),
+  videoFormat: z.nativeEnum(LessonVideoFormat),
   isActive: z.boolean().optional(),
   orderId: z.number().min(1, 'Tartib raqami 1 dan katta bo\'lishi kerak').optional(),
   videoId: z.string().optional().nullable(),
@@ -47,6 +48,11 @@ initialDate.setHours(0, 0, 0);
 const typeData = [
   { type: LessonLinkType.YOU_TUBE, name: 'YouTube link' },
   { type: LessonLinkType.VIDEO, name: 'Yuklanadigan dars(file)' },
+];
+
+const formatData = [
+  { type: LessonVideoFormat.HORIZONTAL, name: 'Gorizontal (Regular)' },
+  { type: LessonVideoFormat.VERTICAL, name: 'Vertikal (Shorts)' },
 ];
 
 export default function LessonForm({ lesson, lastDataOrder: lastLessonOrder, setSheetOpen }: IProps) {
@@ -80,6 +86,7 @@ export default function LessonForm({ lesson, lastDataOrder: lastLessonOrder, set
           description: lesson.description,
           thumbnail: lesson.thumbnail ? `${baseMediaUrl}/${lesson.thumbnail}` : undefined,
           linkType: lesson.linkType,
+          videoFormat: lesson.videoFormat || LessonVideoFormat.HORIZONTAL,
           link: lesson.linkType === LessonLinkType.YOU_TUBE ? lesson.link : '',
           videoId: lesson.linkType === LessonLinkType.VIDEO ? lesson.link : '',
           duration: lesson.duration,
@@ -96,6 +103,7 @@ export default function LessonForm({ lesson, lastDataOrder: lastLessonOrder, set
           videoId: '',
           duration: 0,
           linkType: LessonLinkType.YOU_TUBE,
+          videoFormat: LessonVideoFormat.HORIZONTAL,
           _duration: initialDate,
           isSoon: false,
           isActive: true,
@@ -134,6 +142,7 @@ export default function LessonForm({ lesson, lastDataOrder: lastLessonOrder, set
         isActive,
         isSoon,
         linkType: formValues.linkType,
+        videoFormat: formValues.videoFormat,
       };
 
       // ✅ THUMBNAIL - File bo'lsa yuklash, string bo'lsa o'sha stringni yuborish
@@ -186,23 +195,35 @@ export default function LessonForm({ lesson, lastDataOrder: lastLessonOrder, set
         <div className="flex flex-col gap-4 my-4">
           <TextField name="title" label="Dars nomi" required />
           
-          <SelectField
-            name="linkType"
-            data={typeData}
-            placeholder="Video turini tanlang..."
-            label="Video turini tanlang"
-          />
-
           <MediaUploadField
             name="thumbnail"
-            label="Rasm yuklash"
+            label="Rasm yuklash (Thumbnail)"
             types={['JPG', 'PNG', 'JPEG', 'WEBP']}
-            defaultValue={lesson?.thumbnail ? `${baseMediaUrl}/${lesson.thumbnail}` : undefined}
+            defaultValue={lesson?.thumbnail}
           />
+
+          <div className="grid grid-cols-2 gap-4">
+            <SelectField
+              name="linkType"
+              data={typeData}
+              placeholder="Video turini tanlang..."
+              label="Video turi"
+            />
+            <SelectField
+              name="videoFormat"
+              data={formatData}
+              placeholder="Formatni tanlang..."
+              label="Video formati"
+            />
+          </div>
 
           {type === LessonLinkType.VIDEO ? (
             <div className="flex justify-between gap-3 items-center">
-              <MediaUploadField name="link" label="Dars videosi" />
+              <MediaUploadField
+                name="link"
+                label="Dars videosi"
+                defaultValue={lesson?.linkType === LessonLinkType.VIDEO && lesson.link.includes('.') ? lesson.link : undefined}
+              />
               <TextField
                 name="videoId"
                 label="Video Id kiriting"

@@ -50,7 +50,7 @@ export default function TextAreaField({
           <FormControl>
             <Textarea
               {...field}
-              value={stripHtml(field.value || '')}
+              value={field.value || ''}
               onChange={(e) => field.onChange(stripHtml(e.target.value))}
               placeholder={placeholder}
             />

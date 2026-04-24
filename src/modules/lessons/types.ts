@@ -10,7 +10,7 @@ export interface Lesson {
   isSoon: boolean;
   isActive: boolean;
   orderId: number;
-
+  videoFormat?: LessonVideoFormat;
 }
 
 export interface LessonInput {
@@ -22,6 +22,7 @@ export interface LessonInput {
   isSoon: boolean;
   isActive: boolean;
   thumbnail?: string;
+  videoFormat?: LessonVideoFormat;
 }
 
 export interface LessonEditBody {
@@ -32,4 +33,9 @@ export interface LessonEditBody {
 export enum LessonLinkType {
   YOU_TUBE = 'YOU_TUBE',
   VIDEO = 'VIDEO',
+}
+
+export enum LessonVideoFormat {
+  HORIZONTAL = 'HORIZONTAL',
+  VERTICAL = 'VERTICAL',
 }

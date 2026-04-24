@@ -31,7 +31,6 @@ const DAYS = [
 const PRODUCT_TYPES = [
   { name: 'Jismoniy mahsulot', type: 'PHYSICAL' },
   { name: 'AI Assistant', type: 'AI_ASSISTANT' },
-  { name: 'Promocode', type: 'PROMOCODE' },
 ];
 
 interface IProps {
@@ -172,7 +171,7 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
         categoryId: categoryId || formValues.categoryId,
         isActive: switchState,
         isActiveOnGift: giftState,
-        workingHours: (formValues.type === 'AI_ASSISTANT' || formValues.type === 'PROMOCODE') ? [] : formValues.workingHours,
+        workingHours: formValues.type === 'AI_ASSISTANT' ? [] : formValues.workingHours,
         type: formValues.type,
         openAiAssistantId: formValues.type === 'AI_ASSISTANT' ? formValues.openAiAssistantId : undefined,
       };
@@ -220,7 +219,7 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
           </div>
 
           {/* Working Hours bo'limi */}
-          {form.watch('type') !== 'AI_ASSISTANT' && form.watch('type') !== 'PROMOCODE' && (
+          {form.watch('type') !== 'AI_ASSISTANT' && (
             <div className="flex gap-2 flex-col border p-4 rounded-md">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-medium">Ish vaqti (Olib ketish uchun)</h3>

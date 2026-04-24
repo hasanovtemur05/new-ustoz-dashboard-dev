@@ -7,14 +7,14 @@ import { GetCoursesList } from '../api';
 
 
 
-export const useCoursesList = ({currentPage , isEnabled = true , }: {currentPage?: number , isEnabled?: boolean } = {}) => {
+export const useCoursesList = ({ currentPage, isEnabled = true, isActive }: { currentPage?: number, isEnabled?: boolean, isActive?: boolean } = {}) => {
   const initialData = {
     data: getCoursesList(),
     paginationInfo: null,
   };
   const { data = initialData, ...args } = useQuery({
-    queryKey: ['courses_list' ,currentPage],
-    queryFn: () => GetCoursesList(currentPage),
+    queryKey: ['courses_list', currentPage, isActive],
+    queryFn: () => GetCoursesList(currentPage, isActive),
     select: (data) => ({
       data: getCoursesList(get(data, 'data.data.data')),
       paginationInfo: get(data, 'data.data.meta.pagination', initialData.paginationInfo),

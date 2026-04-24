@@ -11,6 +11,7 @@ export const useCourseRewardList = (currentPage: number, courseId: string) => {
   const { data = initialData, ...args } = useQuery({
     queryKey: ['course_rewards_list', currentPage, courseId],
     queryFn: () => GetDatasList(currentPage, courseId),
+    enabled: !!courseId,
     select: (data) => ({
       data: getDatasList(get(data, 'data.data')),
       paginationInfo: get(data, 'data.data.meta.pagination', initialData.paginationInfo),

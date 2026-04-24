@@ -25,8 +25,8 @@ const AddRewardToLessons = () => {
   const [courses, setCourses] = useState<CustomSelectType[]>([]);
   const [course, setCourse] = useState<CustomSelectType>();
 
-  const { data: coursesList } = useCoursesList();
-  const { data: couseAssitants, isLoading, paginationInfo } = useCourseRewardList(currentPage, `${course?.id}`);
+  const { data: coursesList } = useCoursesList({ isActive: true });
+  const { data: couseAssitants, isLoading, paginationInfo } = useCourseRewardList(currentPage, String(course?.id || ''));
 
   const { triggerInfoDelete } = useDeleteCourseReward(data?.id!);
   const getRowData = (info: ICourseReward) => {

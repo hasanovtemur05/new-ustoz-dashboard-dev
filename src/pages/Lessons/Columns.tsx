@@ -1,6 +1,7 @@
 
 import { ColumnDef } from '@tanstack/react-table';
-import { Lesson, LessonLinkType } from 'modules/lessons/types';
+import { Lesson, LessonLinkType, LessonVideoFormat } from 'modules/lessons/types';
+import { Badge } from 'components/ui/badge';
 import { DataTableRowActions } from 'components/DataTableRowActions';
 
 interface IProps {
@@ -18,6 +19,25 @@ export const createLessonColumns = ({ getRowData, setSheetOpen, setDialogOpen }:
   {
     accessorKey: 'title',
     header: 'Dars nomi',
+  },
+  {
+    accessorKey: 'videoFormat',
+    header: 'Video formati',
+    cell: ({ row }) => {
+      const format = row.original.videoFormat;
+      if (format === LessonVideoFormat.VERTICAL) {
+        return (
+          <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400">
+            Vertikal (Shorts)
+          </Badge>
+        );
+      }
+      return (
+        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400">
+          Gorizontal
+        </Badge>
+      );
+    },
   },
   {
     accessorKey: 'link',

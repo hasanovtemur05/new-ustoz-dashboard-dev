@@ -2,6 +2,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { DataTableRowActions } from 'components/DataTableRowActions';
 import CustomSwitch from 'components/SwitchIsDreft';
 import { ProductType } from 'modules/product/types';
+import { Badge } from 'components/ui/badge';
+import { cn } from 'utils/styleUtils';
 
 interface IProps {
   getRowData: (notification: ProductType) => void;
@@ -53,9 +55,20 @@ export const createDataColumns = ({
       header: 'Turi',
       cell: ({ row }) => {
         const type = row.original.type;
-        if (type === 'AI_ASSISTANT') return <span>AI Assistant</span>;
-        if (type === 'PROMOCODE') return <span>Promocode</span>;
-        return <span>Jismoniy</span>;
+        const isAI = type === 'AI_ASSISTANT';
+        return (
+          <Badge 
+            variant="outline" 
+            className={cn(
+              "font-medium px-3 py-1 rounded-md", 
+              isAI 
+                ? "bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800"
+                : "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800"
+            )}
+          >
+            {isAI ? 'AI Assistant' : 'Jismoniy'}
+          </Badge>
+        );
       },
     },
     {

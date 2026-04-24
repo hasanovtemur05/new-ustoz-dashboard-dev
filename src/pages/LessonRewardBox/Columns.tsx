@@ -2,7 +2,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Button } from 'components/ui/button';
 import { ILessonRewardBox } from 'modules/lesson-reward-box/types';
 import { Edit, Trash2, ListPlus } from 'lucide-react';
-import normalizeImgUrl from 'utils/normalizeFileUrl';
+import { getMediaUrl } from 'utils/common';
 
 interface ColumnsProps {
   onEdit: (box: ILessonRewardBox) => void;
@@ -19,7 +19,7 @@ export const createColumns = ({ onEdit, onManageItems, onDelete }: ColumnsProps)
     accessorKey: 'image',
     header: 'Rasm',
     cell: ({ row }) => (
-      <img src={normalizeImgUrl(row.original.image)} alt={row.original.title} className="w-10 h-10 object-cover rounded" />
+      <img src={getMediaUrl(row.original.image)} alt={row.original.title} className="w-16 h-12 object-cover rounded border" />
     ),
   },
   {

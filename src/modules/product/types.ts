@@ -6,7 +6,7 @@ export interface WorkingHourType {
   close: string;
 }
 
-export type ProductKind = 'PHYSICAL' | 'AI_ASSISTANT' | 'PROMOCODE';
+export type ProductKind = 'PHYSICAL' | 'AI_ASSISTANT';
 
 export interface ProductType {
   id: string;

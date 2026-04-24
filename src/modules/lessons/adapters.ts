@@ -13,6 +13,7 @@ export const getLesson = (item?: Lesson) => {
     orderId: item?.orderId ?? 0,
     isSoon: item?.isSoon ?? false,
     isActive: item?.isActive ?? false,
+    videoFormat: item?.videoFormat,
   };
 };
 

@@ -35,7 +35,7 @@ export default function CustomForm({ selectedData, setSheetOpen }: IProps) {
   });
 
   // Get data
-  const { data: coursesList, isLoading: loadingCourses } = useCoursesList();
+  const { data: coursesList, isLoading: loadingCourses } = useCoursesList({ isActive: true });
   const { data: lessons, isLoading: loadingLessons } = useCourseLessonsList(selectedCourseId);
   const { data: rewards, isLoading: loadingRewards } = useLessonRewardList({ pageSize: 100 });
 
@@ -91,10 +91,11 @@ export default function CustomForm({ selectedData, setSheetOpen }: IProps) {
   // Update courses dropdown
   useEffect(() => {
     if (coursesList) {
-      const newArr: SelectType[] = coursesList.map((el) => ({
-        name: el.title,
-        type: el.id,
-      }));
+      const newArr: SelectType[] = coursesList
+        .map((el) => ({
+          name: el.title,
+          type: el.id,
+        }));
       setCoursesData(newArr);
     }
   }, [coursesList]);

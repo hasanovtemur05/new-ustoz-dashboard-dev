@@ -4,6 +4,9 @@ import { Form } from 'components/ui/form';
 import { SelectField, SearchSelectField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import { Button } from 'components/ui/button';
+import { Badge } from 'components/ui/badge';
+import { LessonRewardType } from 'modules/course-reward-product/types';
+import { cn } from 'utils/styleUtils';
 import { Trash2, Upload, FileUp } from 'lucide-react';
 import { itemSchema, ItemFormValues } from './schema';
 import { useAddItemToBox } from 'modules/lesson-reward-box/hooks/useAddItem';
@@ -12,8 +15,18 @@ import { ILessonRewardBox } from 'modules/lesson-reward-box/types';
 import { useLessonRewardList } from 'modules/course-reward-product/hooks/useList';
 import { useUploadPromocode } from 'modules/course-reward-promocode/hooks/useUploadPromocode';
 import { useFortunaPromocodesList } from 'modules/course-reward-promocode/hooks/useList';
-import normalizeImgUrl from 'utils/normalizeFileUrl';
+import { getMediaUrl } from 'utils/common';
 import { useRef, useState } from 'react';
+
+const typeMap: Record<string, { label: string; className: string }> = {
+  [LessonRewardType.COIN]: { label: 'Coin', className: 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800' },
+  [LessonRewardType.PRODUCT]: { label: 'Mahsulot', className: 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800' },
+  [LessonRewardType.PROMOCODE]: { label: 'Promocode', className: 'bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800' },
+  [LessonRewardType.FILE]: { label: 'File', className: 'bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:border-orange-800' },
+  [LessonRewardType.EMPTY]: { label: "Bo'sh", className: 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700' },
+  [LessonRewardType.AMATEUR_CERTIFICATE]: { label: 'Havaskor Sertifikat', className: 'bg-teal-100 text-teal-700 border-teal-200 dark:bg-teal-900/30 dark:text-teal-400 dark:border-teal-800' },
+  [LessonRewardType.PROGRESSIVE_CERTIFICATE]: { label: 'Yuksaluvchi Sertifikat', className: 'bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-400 dark:border-indigo-800' },
+};
 
 interface IProps {
   box: ILessonRewardBox;
@@ -25,7 +38,7 @@ export default function ItemsForm({ box }: IProps) {
   const { mutateAsync: addItem, isPending: isAdding } = useAddItemToBox(box.courseId, box.id);
   const { mutateAsync: deleteItem } = useDeleteBoxItem(box.courseId);
   const { mutateAsync: uploadPromocode, isPending: isUploading } = useUploadPromocode();
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeItemId, setActiveItemId] = useState<string | null>(null);
 
@@ -76,20 +89,24 @@ export default function ItemsForm({ box }: IProps) {
           {box.items.map((item) => (
             <div key={item.id} className="flex items-center justify-between p-3 border rounded-lg bg-white dark:bg-gray-800">
               <div className="flex items-center gap-3">
-                <img src={normalizeImgUrl(item.rewardPhoto)} alt={item.rewardTitle} className="w-8 h-8 rounded object-cover" />
+                <img src={getMediaUrl(item.rewardPhoto)} alt={item.rewardTitle} className="w-14 h-12 rounded object-cover border" />
                 <div>
                   <p className="font-medium">{item.rewardTitle}</p>
-                  <p className="text-xs text-gray-500">{item.rewardType}</p>
+                  <div className="mt-1">
+                    <Badge variant="outline" className={cn("text-[10px] font-medium py-0 h-5", typeMap[item.rewardType as any]?.className)}>
+                      {typeMap[item.rewardType as any]?.label || item.rewardType}
+                    </Badge>
+                  </div>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-2">
                 {item.rewardType?.toUpperCase() === 'PROMOCODE' && (
                   <span className="text-[10px] text-muted-foreground mr-1">
                     Soni: {promocodeCounts?.find((r: any) => r.rewardId === item.rewardId)?.count || 0}
                   </span>
                 )}
-                
+
                 <Button variant="ghost" size="icon" onClick={() => deleteItem(item.id)} className="text-red-500">
                   <Trash2 className="w-4 h-4" />
                 </Button>

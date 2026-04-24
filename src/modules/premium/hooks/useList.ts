@@ -37,8 +37,8 @@ export const useUsersListForPremium = (currentPage: number, searchValue: string)
     queryKey: ['users_list', currentPage, searchValue],
     queryFn: () => GetUserList(currentPage, searchValue),
     select: (data) => ({
-      data: getUserDatasList(get(data, 'data')) as User[],
-      paginationInfo: get(data, 'pagination'),
+      data: getUserDatasList(get(data, 'data.data')) as User[],
+      paginationInfo: get(data, 'data.meta.pagination'),
     }),
   });
 
