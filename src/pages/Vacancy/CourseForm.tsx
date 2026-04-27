@@ -10,10 +10,22 @@ import { useCreateVacancy } from 'modules/vacancy/hooks/useCreateCourse';
 import { useEditVacancy } from 'modules/vacancy/hooks/useEditCourse';
 import { vacancyFormSchema, vacancySchema } from './schema';
 
-const typeData = [
-  { type: VacancyType.FULL_TIME, name: "To'liq vaqt" },
-  { type: VacancyType.ONE_TIME, name: 'Bir martalik' },
-  { type: VacancyType.INTERN, name: 'Amalyot' },
+const workScheduleData = [
+  { type: 'FULL_TIME', name: "To'liq kun" },
+  { type: 'PART_TIME', name: 'Yarim stavka' },
+  { type: 'REMOTE', name: 'Masofaviy' },
+];
+
+const experienceData = [
+  { type: 'NO_EXPERIENCE', name: 'Tajriba shart emas' },
+  { type: 'ONE_TO_THREE_YEARS', name: '1 yildan 3 yilgacha' },
+  { type: 'THREE_TO_SIX_YEARS', name: '3 yildan 6 yilgacha' },
+  { type: 'SIX_PLUS_YEARS', name: "6 yildan ko'p" },
+];
+
+const vacancyTypeData = [
+  { type: 'INTERN', name: 'Amalyot' },
+  { type: 'EMPLOYEE', name: 'Xodim' },
 ];
 
 interface IProps {
@@ -34,51 +46,48 @@ export default function CourseForm({ vacancy, setSheetOpen }: IProps) {
     defaultValues: vacancy
       ? {
           title: vacancy?.title,
-          address: vacancy?.address,
+          address: vacancy?.address?.region || '', // Simple fallback for now
           description: vacancy?.description,
           company: vacancy?.company,
-          // address: vacancy?.address,
-          salary: vacancy?.salary,
+          salaryFrom: vacancy?.salaryFrom,
+          salaryTo: vacancy?.salaryTo,
           type: vacancy?.type,
-          fromExperience: vacancy?.fromExperience,
-          toExperience: vacancy?.toExperience,
+          workSchedule: vacancy?.workSchedule,
+          experience: vacancy?.experience,
           skills: vacancy?.skills,
+          specialization: vacancy?.specialization || '',
         }
       : {
           title: '',
           address: '',
           description: '',
           company: '',
-          salary: 0,
-          type: VacancyType.EMPTY,
-          fromExperience: 0,
-          toExperience: 0,
-          // skills: ,
+          salaryFrom: 0,
+          salaryTo: 0,
+          type: 'EMPLOYEE',
+          workSchedule: 'FULL_TIME',
+          experience: 'NO_EXPERIENCE',
+          specialization: '',
         },
   });
 
   async function onSubmit(formValues: vacancyFormSchema) {
-    const { fromExperience, toExperience, salary, skills } = formValues;
+    const { salaryFrom, salaryTo, skills, specialization } = formValues;
+
+    const payload = {
+      ...formValues,
+      salaryFrom: +salaryFrom,
+      salaryTo: +salaryTo,
+      skills: skills.map((skill) => (typeof skill === 'string' ? skill : skill.title)),
+      specialization: specialization,
+    };
 
     if (vacancy) {
-      const normalizedSkills = skills.map((skill) => (typeof skill === 'string' ? skill : skill.title));
-      triggerVacancyEdit({
-        ...formValues,
-        fromExperience: +fromExperience,
-        toExperience: +toExperience,
-        salary: +salary,
-        skills: normalizedSkills,
-      });
+      triggerVacancyEdit(payload);
     } else {
-      triggerVacancyCreate({
-        ...formValues,
-        fromExperience: +fromExperience,
-        toExperience: +toExperience,
-        salary: +salary,
-      });
+      triggerVacancyCreate(payload);
     }
   }
-
 
   return (
     <Form {...form}>
@@ -88,18 +97,20 @@ export default function CourseForm({ vacancy, setSheetOpen }: IProps) {
 
           <TextField name="company" label="Kompaniya nomi" placeholder="Google" required />
 
-          <TextField name="address" label="Manzil" required placeholder="Toshkent , Uzbekistan" />
+          <TextField name="specialization" label="Mutaxassislik" placeholder="Frontend Developer" required />
 
-          <SelectField name="type" data={typeData} placeholder="Vakansiya turi..." label="Vakansiya turi" />
+          <TextField name="address" label="Manzil" required placeholder="Samarqand" />
 
-          <NumberTextField name="salary" placeholder="Oylik maosh" label="Oylik maosh" required />
+          <div className="grid grid-cols-2 gap-4">
+             <SelectField name="type" data={vacancyTypeData} placeholder="Turi..." label="Vakansiya turi" />
+             <SelectField name="workSchedule" data={workScheduleData} placeholder="Ish vaqti..." label="Ish vaqti" />
+          </div>
 
-          <div>
-            <h2 className="font-medium">Talab etadigan tajriba</h2>
-            <div className="flex items-end gap-2">
-              <NumberTextField name={'fromExperience'} label="Boshlang'ich" required />
-              <NumberTextField name={'toExperience'} label="Maximal" required />
-            </div>
+          <SelectField name="experience" data={experienceData} placeholder="Tajriba..." label="Talab etiladigan tajriba" />
+
+          <div className="grid grid-cols-2 gap-4">
+            <NumberTextField name="salaryFrom" placeholder="Dan" label="Oylik (dan)" required />
+            <NumberTextField name="salaryTo" placeholder="Gacha" label="Oylik (gacha)" required />
           </div>
 
           <TextAreaField name="description" label="Vakansiya Tarifi " required />

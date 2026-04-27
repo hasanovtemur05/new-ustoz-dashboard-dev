@@ -7,6 +7,7 @@ export interface ILessonRewardBox {
   description?: string;
   isClaimed: boolean;
   lessonTitle?: string;
+  lessonOrder?: number;
   items: ILessonRewardBoxItem[];
 }
 

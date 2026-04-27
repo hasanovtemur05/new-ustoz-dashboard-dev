@@ -77,12 +77,12 @@ export default function CustomForm({ selectedData, setSheetOpen }: IProps) {
         delete payload.partId;
       }
       if (selectedData) {
-        triggerEdit(payload);
+        await triggerEdit(payload);
       } else {
-        triggerCreate(payload);
+        await triggerCreate(payload);
       }
     } catch (error) {
-      alert('Aniqlanmagan hatolik!');
+      console.error(error);
     } finally {
       setState(false);
     }

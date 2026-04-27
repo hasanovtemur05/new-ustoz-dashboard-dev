@@ -43,18 +43,6 @@ const CourseRewardsTabsPage = () => {
           </p>
         </div>
 
-        {activeTab !== 'templates' && (
-          <div className="flex items-center gap-3 animate-in fade-in slide-in-from-right-1 duration-300">
-            <span className="text-sm font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap">Barcha kurslar:</span>
-            <SearchSelectWithoutForm
-              data={coursesOptions}
-              value={selectedCourseId}
-              placeholder="Barcha kurslar"
-              onChange={(val) => setSearchParams({ courseId: val })}
-              className="w-full md:w-[250px]"
-            />
-          </div>
-        )}
       </div>
 
       {activeTab !== 'templates' && quickAccessCourses.length > 0 && (

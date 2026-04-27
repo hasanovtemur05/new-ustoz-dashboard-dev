@@ -14,7 +14,7 @@ interface IHook {
 export const useEditCourseReward = ({ id = '', setSheetOpen }: IHook) => {
   const { toast } = useToast();
 
-  const { mutate, isPending, isSuccess, isError } = useMutation({
+  const { mutateAsync, isPending, isSuccess, isError } = useMutation({
     mutationFn: (values: ICourseRewardInput) => EditData({ values, id }),
     onSuccess: () => {
       toast({
@@ -29,7 +29,7 @@ export const useEditCourseReward = ({ id = '', setSheetOpen }: IHook) => {
   });
 
   return {
-    triggerEdit: mutate,
+    triggerEdit: mutateAsync,
     isPending,
     isSuccess,
     isError,

@@ -3,15 +3,29 @@ import { DataTableRowActions } from 'components/DataTableRowActions';
 import { ICourseReward } from 'modules/add-reward-to-lessons/types';
 import { Badge } from 'components/ui/badge';
 import { getMediaUrl } from 'utils/common';
-import { LessonRewardType } from 'modules/course-reward-product/types';
 import { cn } from 'utils/styleUtils';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from 'components/ui/dialog';
+
 interface IProps {
   getRowData: (notification: ICourseReward) => void;
   setSheetOpen: (state: boolean) => void;
   setDialogOpen: (state: boolean) => void;
 }
 
-
+const renderWithTooltip = (text: string, maxLength: number = 20) => {
+  if (!text || text === "...") return text || "—";
+  if (text.length <= maxLength) return text;
+  
+  return (
+    <span className="custom-tooltip font-medium cursor-help underline decoration-dotted decoration-slate-300 underline-offset-4" data-tooltip={text}>
+      {text.substring(0, maxLength)}...
+    </span>
+  );
+};
 
 const typeMap: Record<string, { label: string; className: string }> = {
   'COIN': { label: 'Coin', className: 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800' },
@@ -24,32 +38,62 @@ const typeMap: Record<string, { label: string; className: string }> = {
 
 export const createDataColumns = ({ getRowData, setSheetOpen, setDialogOpen }: IProps): ColumnDef<ICourseReward>[] => [
   {
+    id: 'index',
+    header: '№',
+    size: 50,
+    cell: ({ row }) => (
+      <span className="text-slate-500 font-medium">{row.index + 1}</span>
+    ),
+  },
+  {
     accessorKey: 'orderId',
-    header: 'Tartib',
+    header: 'Dars raqami',
     size: 60,
   },
   {
     accessorKey: 'title',
     header: 'Dars nomi',
+    cell: ({ row }) => renderWithTooltip(row.original.title, 30),
   },
   {
     accessorKey: 'rewardPhoto',
     header: 'Rasm',
+    size: 100,
     cell: ({ row }) => {
       const photo = row.original.rewardPhoto;
-      if (!photo) return null;
+      if (!photo) return <span className="text-slate-300 text-[10px]">no photo</span>;
+      const imageUrl = getMediaUrl(photo);
       return (
-        <img 
-          src={getMediaUrl(photo)} 
-          alt="reward" 
-          className="w-10 h-10 object-cover rounded-md border border-slate-200 shadow-sm" 
-        />
+        <Dialog>
+          <DialogTrigger asChild>
+            <div className="flex items-center justify-center cursor-pointer group relative w-16 h-10">
+              <img 
+                src={imageUrl} 
+                alt="reward" 
+                className="w-16 h-10 object-cover rounded shadow-sm border border-slate-100 transition-transform group-hover:scale-105" 
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded transition-colors flex items-center justify-center">
+                <span className="text-white opacity-0 group-hover:opacity-100 text-[8px] font-bold">KO'RISH</span>
+              </div>
+            </div>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[600px] p-0 overflow-hidden bg-transparent border-none shadow-none">
+            <div className="relative w-full h-full flex items-center justify-center">
+              <img 
+                src={imageUrl} 
+                alt="reward large" 
+                className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl" 
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
       );
     },
   },
   {
     accessorKey: 'reward',
     header: 'Sovg\'a',
+    cell: ({ row }) => renderWithTooltip(row.original.reward, 20),
   },
   {
     accessorKey: 'rewardType',
@@ -73,7 +117,7 @@ export const createDataColumns = ({ getRowData, setSheetOpen, setDialogOpen }: I
       return (
         <div className="flex items-center gap-3">
           {isPartial && (
-            <Badge variant="secondary" className="text-xs">
+            <Badge variant="secondary" className="text-xs bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border-none">
               Qism {partNumber} / {totalParts}
             </Badge>
           )}

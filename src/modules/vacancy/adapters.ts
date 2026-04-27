@@ -1,16 +1,24 @@
 import { Vacancy, VacancyType } from "./types";
-export const getVacancy = (item?: Vacancy) => {
+export const getVacancy = (item?: any): Vacancy => {
   return {
     id: item?.id ?? "",
-    description: item?.description ?? "",
+    type: item?.type ?? "",
     title: item?.title ?? "",
+    specialization: item?.specialization ?? "",
+    address: {
+      id: item?.address?.id ?? "",
+      region: item?.address?.region ?? "",
+      district: item?.address?.district ?? "",
+    },
+    salaryFrom: item?.salaryFrom ?? 0,
+    salaryTo: item?.salaryTo ?? 0,
+    workSchedule: item?.workSchedule ?? "",
+    experience: item?.experience ?? "",
+    status: item?.status ?? "",
+    createdAt: item?.createdAt ?? "",
     company: item?.company ?? "",
-    address: item?.address ?? "",
-    salary: item?.salary ?? 0,
-    fromExperience: item?.fromExperience ?? 0,
-    toExperience: item?.toExperience ?? 0,
-    type: item?.type ?? VacancyType.EMPTY,
-    skills: item?.skills ?? [""]
+    description: item?.description ?? "",
+    skills: item?.skills ?? []
   };
 };
 

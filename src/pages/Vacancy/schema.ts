@@ -22,12 +22,14 @@ export const vacancySchema = z.object({
     message: 'description uchun kamida 20 ta harifdan iforat text kirgazing',
   }),
   company: z.string({ message: 'Companiya nomi kiritlishi shart' }),
-  address: z.string({ message: 'Manzil kiritlishi shart' }),
-  salary: z.union([z.number(), z.string()]),
-  type: z.nativeEnum(VacancyType),
-  fromExperience: z.union([z.number(), z.string()]),
-  toExperience: z.union([z.number(), z.string()]),
+  address: z.string({ message: 'Manzil kiritlishi shart' }), // Kept as string for form input
+  salaryFrom: z.union([z.number(), z.string()]),
+  salaryTo: z.union([z.number(), z.string()]),
+  type: z.string(), // Vacancy type (INTERN etc)
+  workSchedule: z.string(), // FULL_TIME etc
+  experience: z.string(), // NO_EXPERIENCE etc
   skills: skillsSchema,
+  specialization: z.string().min(1, { message: "Mutaxassislik kiritilishi shart" }),
 });
 
 export type vacancyFormSchema = z.infer<typeof vacancySchema>;

@@ -78,6 +78,16 @@ export const createColumns = ({ onEdit, onManageItems, onDelete }: ColumnsProps)
     },
   },
   {
+    accessorKey: 'lessonOrder',
+    header: 'Dars raqami',
+    size: 100,
+    cell: ({ row }) => (
+      <span className="font-semibold text-slate-600 dark:text-slate-400">
+        {row.original.lessonOrder || "—"}
+      </span>
+    ),
+  },
+  {
     accessorKey: 'lessonTitle',
     header: 'Dars nomi',
     size: 250,

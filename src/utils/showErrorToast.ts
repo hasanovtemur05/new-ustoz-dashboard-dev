@@ -1,17 +1,19 @@
 import { toast } from 'components/ui/use-toast';
 
 export const showErrorToast = (error: any) => {
-  if (Array.isArray(error.response.data.message)) {
+  const message = error?.response?.data?.message || error?.message || 'Aniqlanmagan xatolik yuz berdi';
+
+  if (Array.isArray(message)) {
     toast({
       variant: 'destructive',
       title: 'Xatolik!',
-      description: error.response.data.message.join('\n'),
+      description: message.join('\n'),
     });
   } else {
     toast({
       variant: 'destructive',
       title: 'Xatolik!',
-      description: error.response.data.message,
+      description: message,
     });
   }
 };
