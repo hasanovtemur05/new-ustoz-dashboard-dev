@@ -5,28 +5,24 @@ import { AlertDialog } from 'components/AlertDialog';
 import Loader from 'components/Loader';
 import { createDataColumns } from './Columns';
 import CustomForm from './CustomForm';
+import { BookOpen } from 'lucide-react';
 import { Pagination } from 'components/Pagination';
 import { useCourseRewardList } from 'modules/add-reward-to-lessons/hooks/useList';
 import { useDeleteCourseReward } from 'modules/add-reward-to-lessons/hooks/useDelete';
 import { ICourseReward } from 'modules/add-reward-to-lessons/types';
-import { useCoursesList } from 'modules/courses/hooks/useCoursesList';
-import SelectWithoutForm from 'components/fields/SelectWithoutForm';
-import SearchSelectWithoutForm from 'components/fields/SearchSelectWithoutForm';
 import { Button } from 'components/ui/button';
-import { CustomSelectType } from 'pages/UsersCertificates/Page';
 import { useSearchParams } from 'react-router-dom';
 
 const AddRewardToLessons = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isSheetOpen, setSheetOpen] = useState(false);
   const [data, setData] = useState<ICourseReward>();
   const [currentPage, setCurrentPage] = useState(1);
-  const [courses, setCourses] = useState<CustomSelectType[]>([]);
-  const [course, setCourse] = useState<CustomSelectType>();
+  const courseId = searchParams.get('courseId') || '';
 
-  const { data: coursesList } = useCoursesList({ isActive: true });
-  const { data: couseAssitants, isLoading, paginationInfo } = useCourseRewardList(currentPage, String(course?.id || ''));
+  const isCourseNotSelected = !courseId || courseId === 'unassigned';
+  const { data: couseAssitants, isLoading, isError, paginationInfo } = useCourseRewardList(currentPage, isCourseNotSelected ? '' : courseId);
 
   const { triggerInfoDelete } = useDeleteCourseReward(data?.id!);
   const getRowData = (info: ICourseReward) => {
@@ -46,43 +42,14 @@ const AddRewardToLessons = () => {
     setSheetOpen,
   });
 
-  useEffect(() => {
-    let newArr: CustomSelectType[] = [];
-    if (coursesList) {
-      coursesList.forEach((el) =>
-        newArr.push({
-          name: el.title,
-          id: el.id,
-        })
-      );
-      setCourses(newArr);
-      setCourse(newArr[0]);
-      setSearchParams({ courseId: newArr[0] ? `${newArr[0]?.id}` : '' });
-    }
-  }, [coursesList]);
 
-
-  const handleCourseChange = (value: string) => {
-    const selectedCourse = courses.find((c) => c.id === value);
-    setCourse(selectedCourse);
-
-    setSearchParams((prev) => {
-      const newParams = new URLSearchParams(prev);
-      newParams.set('courseId', value);
-      return newParams;
-    });
-
-    // Sahifani birinchiga qaytarish
-    setCurrentPage(1);
-  };
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center gap-3">
-          <SearchSelectWithoutForm data={courses} placeholder="Kursni  bo'yicha..." onChange={handleCourseChange} className="w-[250px]" />
-        </div>
-        {course && <h2 className="font-bold text-2xl"> {course?.name} sovg'alari </h2>}
+    <div className="flex flex-col gap-4">
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="font-bold text-2xl whitespace-nowrap text-slate-800 dark:text-slate-100">
+          Dars sovg'alari
+        </h2>
 
         <div className="flex items-center gap-2">
           <Button
@@ -95,11 +62,29 @@ const AddRewardToLessons = () => {
           </Button>
         </div>
       </div>
-      {isLoading ? (
+      {isCourseNotSelected ? (
+        <div className="flex flex-col items-center justify-center py-24 bg-slate-50 dark:bg-slate-900/50 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-800">
+          <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-4">
+            <BookOpen className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+          </div>
+          <p className="text-slate-600 dark:text-slate-300 font-semibold text-xl">
+            Ma'lumotlarni ko'rish uchun kursni tanlang
+          </p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 max-w-xs text-center">
+            Ushbu bo'limdagi ma'lumotlarni ko'rish uchun yuqoridagi ro'yxatdan bitta kursni tanlashingiz lozim.
+          </p>
+        </div>
+      ) : isLoading ? (
         <Loader />
+      ) : isError ? (
+        <div className="flex flex-col items-center justify-center py-20 bg-slate-50 dark:bg-slate-900/50 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-800">
+          <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">
+            Ma'lumotlarni yuklashda xatolik yuz berdi. 
+          </p>
+        </div>
       ) : (
         <>
-          <DataTable columns={columns} data={couseAssitants} />
+          <DataTable columns={columns} data={couseAssitants || []} />
           {paginationInfo && (
             <Pagination
               className="justify-end mt-3"

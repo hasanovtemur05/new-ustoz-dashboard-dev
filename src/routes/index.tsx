@@ -53,6 +53,7 @@ import VerificationPage from 'pages/Verification/Page';
 import LessonRewardBoxPage from 'pages/LessonRewardBox/Page';
 import SuggestionDepartmentPage from 'pages/SuggestionDepartment/Page';
 import HolidaysPage from 'pages/Holidays/Page';
+import CourseRewardsTabsPage from 'pages/CourseRewardsTabs/Page';
 
 const routePermissions: { [key: string]: UserRole[] } = {
   '/': [UserRole.SUPER_ADMIN, UserRole.STATISTICS_ADMIN],
@@ -93,7 +94,7 @@ const routePermissions: { [key: string]: UserRole[] } = {
   '/survey': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/call-center': [UserRole.SUPER_ADMIN, UserRole.CALL_CENTER],
   '/web-games': [UserRole.SUPER_ADMIN],
-  '/lesson-reward-box': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
+  '/course-rewards-tabs': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/suggestion-departments': [UserRole.SUPER_ADMIN],
   '/holidays': [UserRole.SUPER_ADMIN],
 };
@@ -140,7 +141,7 @@ const routes = [
   { path: '/survey', element: <SurveyPage /> },
   { path: '/call-center', element: <CallCenterPage /> },
   { path: '/web-games', element: <WebGamesPage /> },
-  { path: '/lesson-reward-box', element: <LessonRewardBoxPage /> },
+  { path: '/course-rewards-tabs', element: <CourseRewardsTabsPage /> },
   { path: '/suggestion-departments', element: <SuggestionDepartmentPage /> },
   { path: '/holidays', element: <HolidaysPage /> },
 ];

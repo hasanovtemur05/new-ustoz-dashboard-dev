@@ -98,3 +98,103 @@
 .quiz_quill .ql-editor{
   min-height: 70px !important;
 }
+
+/* Custom CSS Tooltip */
+.custom-tooltip {
+  position: relative;
+}
+
+.custom-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #1e293b; /* slate-800 */
+  color: #f8fafc; /* slate-50 */
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: normal;
+  width: max-content;
+  max-width: 200px;
+  line-height: 1.4;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease-in-out;
+  z-index: 1000;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  pointer-events: none;
+  text-align: center;
+}
+
+/* Tooltip Arrow */
+.custom-tooltip::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #1e293b transparent transparent transparent;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease-in-out;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.custom-tooltip:hover::after,
+.custom-tooltip:hover::before {
+  opacity: 1;
+  visibility: visible;
+  bottom: calc(100% + 10px);
+}
+
+.custom-tooltip:hover::before {
+  bottom: calc(100% + 0px);
+}
+
+.dark .custom-tooltip::after {
+  background-color: #0f172a; /* slate-900 */
+  border: 1px solid #1e293b;
+}
+
+.dark .custom-tooltip::before {
+  border-color: #0f172a transparent transparent transparent;
+}
+
+/* Global Scrollbar Styles */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #f1f5f9; /* slate-100 */
+  border-radius: 20px;
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-track {
+  background: #0f172a; /* slate-900 */
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1; /* slate-300 */
+  border-radius: 20px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #334155; /* slate-700 */
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8; /* slate-400 */
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: #475569; /* slate-600 */
+}

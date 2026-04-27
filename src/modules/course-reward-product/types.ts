@@ -19,6 +19,7 @@ export interface LessonReward {
   file?: string;
   isPartial?: boolean;
   courseId?: string;
+  productId?: string;
   parts?: { id: string; title: string; photo: string; value: number }[];
 }
 
@@ -32,6 +33,7 @@ export interface LessonRewardInputType {
   file?: any;
   isPartial?: boolean;
   courseId?: string;
+  productId?: string;
   parts?: { id?: string; title: string; photo?: any; value: number }[];
 }
 

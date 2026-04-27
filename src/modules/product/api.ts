@@ -9,16 +9,19 @@ export const GetDatasList = async (
   search?: string,
   isActive?: boolean
 ) => {
-  return await http.get(`/product`, {
-    params: {
-      pageNumber,
-      pageSize,
-      categoryId,
-      isActiveOnGift,
-      search,
-      isActive
-    }
-  });
+  const params: any = {
+    pageNumber,
+    pageSize,
+    categoryId,
+    isActiveOnGift,
+    search,
+    isActive
+  };
+
+  // Remove undefined parameters
+  Object.keys(params).forEach(key => params[key] === undefined && delete params[key]);
+
+  return await http.get(`/product`, { params });
 };
 
 export const GetOneProduct = async (id: string) => {

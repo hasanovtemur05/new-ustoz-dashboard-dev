@@ -6,43 +6,24 @@ import Loader from 'components/Loader';
 import { createColumns } from './Columns';
 import CustomForm from './CustomForm';
 import ItemsForm from './ItemsForm';
+import { Package } from 'lucide-react';
 import { useLessonRewardBoxes } from 'modules/lesson-reward-box/hooks/useList';
 import { useDeleteBox } from 'modules/lesson-reward-box/hooks/useDelete';
 import { ILessonRewardBox } from 'modules/lesson-reward-box/types';
-import { useCoursesList } from 'modules/courses/hooks/useCoursesList';
-import SelectWithoutForm from 'components/fields/SelectWithoutForm';
-import SearchSelectWithoutForm from 'components/fields/SearchSelectWithoutForm';
 import { Button } from 'components/ui/button';
 import { useSearchParams } from 'react-router-dom';
 
 const LessonRewardBoxPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [isSheetOpen, setSheetOpen] = useState(false);
   const [isItemsSheetOpen, setItemsSheetOpen] = useState(false);
   const [selectedBox, setSelectedBox] = useState<ILessonRewardBox>();
-  const [courses, setCourses] = useState<{ name: string; id: string }[]>([]);
-  const [selectedCourseId, setSelectedCourseId] = useState<string>(searchParams.get('courseId') || '');
+  const selectedCourseId = searchParams.get('courseId') || '';
+  const isCourseNotSelected = !selectedCourseId || selectedCourseId === 'unassigned';
 
-  const { data: coursesList } = useCoursesList();
-  const { data: boxes, isLoading } = useLessonRewardBoxes(selectedCourseId);
+  const { data: boxes, isLoading, isError } = useLessonRewardBoxes(isCourseNotSelected ? '' : selectedCourseId);
   const { mutateAsync: deleteBox } = useDeleteBox(selectedCourseId);
-
-  useEffect(() => {
-    if (coursesList) {
-      const mapped = coursesList.map((el) => ({ name: el.title, id: el.id }));
-      setCourses(mapped);
-      if (!selectedCourseId && mapped[0]) {
-        setSelectedCourseId(mapped[0].id);
-        setSearchParams({ courseId: mapped[0].id });
-      }
-    }
-  }, [coursesList, selectedCourseId, setSearchParams]);
-
-  const handleCourseChange = (value: string) => {
-    setSelectedCourseId(value);
-    setSearchParams({ courseId: value });
-  };
 
   const columns = createColumns({
     onEdit: (box) => {
@@ -61,27 +42,44 @@ const LessonRewardBoxPage = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center gap-4">
-          <SearchSelectWithoutForm 
-            data={courses} 
-            placeholder="Kursni tanlang" 
-            value={selectedCourseId}
-            onChange={handleCourseChange} 
-            className="w-[280px]"
-          />
-          <h2 className="font-bold text-2xl whitespace-nowrap">Dars Mukofoti Boxlar</h2>
-        </div>
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="font-bold text-2xl whitespace-nowrap text-slate-800 dark:text-slate-100">
+          Kurs uchun Kombo sovg'alar
+        </h2>
 
-        <Button onClick={() => { setSelectedBox(undefined); setSheetOpen(true); }}>
-          Box yaratish
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button onClick={() => { setSelectedBox(undefined); setSheetOpen(true); }}>
+            Kombo sovg'a qo'shish
+          </Button>
+        </div>
       </div>
 
-      {isLoading ? <Loader /> : <DataTable columns={columns} data={boxes || []} />}
+      {isCourseNotSelected ? (
+        <div className="flex flex-col items-center justify-center py-24 bg-slate-50 dark:bg-slate-900/50 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-800">
+          <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-4">
+            <Package className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+          </div>
+          <p className="text-slate-600 dark:text-slate-300 font-semibold text-xl">
+            Boxlarni ko'rish uchun kursni tanlang
+          </p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 max-w-xs text-center">
+            Ushbu bo'limdagi boxlarni ko'rish uchun yuqoridagi ro'yxatdan bitta kursni tanlashingiz lozim.
+          </p>
+        </div>
+      ) : isLoading ? (
+        <Loader />
+      ) : isError ? (
+        <div className="flex flex-col items-center justify-center py-20 bg-slate-50 dark:bg-slate-900/50 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-800">
+          <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">
+            Box ma'lumotlarini yuklashda xatolik yuz berdi. 
+          </p>
+        </div>
+      ) : (
+        <DataTable columns={columns} data={boxes || []} />
+      )}
 
       <Sheet 
-        sheetTitle={selectedBox ? "Boxni tahrirlash" : "Yangi box yaratish"} 
+        sheetTitle={selectedBox ? "Kombo sovg'ani tahrirlash" : "Kurs uchun Kombo sovg'alar yaratish"} 
         isOpen={isSheetOpen} 
         setSheetOpen={setSheetOpen}
       >

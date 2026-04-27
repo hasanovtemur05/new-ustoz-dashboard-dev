@@ -10,8 +10,10 @@ import NumberTextField from 'components/fields/Number';
 import { useCreateLessonReward } from 'modules/course-reward-product/hooks/useCreate';
 import { useEditLessonReward } from 'modules/course-reward-product/hooks/useEdit';
 import { LessonReward, LessonRewardInputType, LessonRewardType } from 'modules/course-reward-product/types';
-import { useCoursesList } from 'modules/courses/hooks/useCoursesList';
+
 import { useCourseLessonsList } from 'modules/lessons/hooks/useCourseLessonsList';
+import { useCoursesList } from 'modules/courses/hooks/useCoursesList';
+import { useProductsList } from 'modules/product/hooks/useList';
 import { Switch } from 'components/ui/switch';
 import { Button } from 'components/ui/button';
 import { UploadPromocodeFile } from 'modules/course-reward-promocode/api';
@@ -26,7 +28,7 @@ const typeData = [
   { type: LessonRewardType.COIN, name: 'Coin' },
   { type: LessonRewardType.PRODUCT, name: 'Mahsulot' },
   { type: LessonRewardType.PROMOCODE, name: 'Promocode' },
-  { type: LessonRewardType.FILE, name: 'File' },
+  { type: LessonRewardType.FILE, name: 'Kitob' },
   { type: LessonRewardType.AMATEUR_CERTIFICATE, name: 'Havaskor Sertifikat' },
   { type: LessonRewardType.PROGRESSIVE_CERTIFICATE, name: 'Yuksaluvchi Sertifikat' },
 ];
@@ -36,8 +38,9 @@ export type SelectType = { name: string; type: string; disabled?: boolean };
 export default function CustomForm({ product, setSheetOpen }: IProps) {
   const [coursesData, setCoursesData] = useState<SelectType[]>([]);
   const [lessonsData, setLessonsData] = useState<SelectType[]>([]);
+  const [marketProductsData, setMarketProductsData] = useState<SelectType[]>([]);
   const [state, setState] = useState(false);
-  const { data: coursesList, isLoading: loadingCourses } = useCoursesList();
+
 
   const { uploadFile: uploadGenericFile } = useFileUploader();
 
@@ -45,6 +48,9 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
   const { triggerEdit, isPending: isNotificationEditPending } = useEditLessonReward({
     id: product?.id,
   });
+
+  const { data: coursesList } = useCoursesList({ isActive: true });
+  const { data: productsList } = useProductsList(1, 100, undefined, undefined);
 
   const form = useForm<useFormSchemaType>({
     resolver: zodResolver(schema),
@@ -59,6 +65,7 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
         file: product.file || '',
         isPartial: product.isPartial || false,
         courseId: product.courseId || '',
+        productId: product.productId || '',
         parts: product.parts?.map(p => ({ ...p, value: p.value ? +p.value : undefined })) || [],
       }
       : {
@@ -68,6 +75,7 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
         file: '',
         isPartial: false,
         courseId: '',
+        productId: '',
         parts: [],
       },
   });
@@ -80,18 +88,29 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
     name: 'parts',
   });
 
+
+
   useEffect(() => {
-    let newArr: SelectType[] = [];
-    if (coursesList) {
-      coursesList.forEach((el) =>
-        newArr.push({
-          name: el.title,
-          type: el.id,
-        })
-      );
+    if (productsList && Array.isArray(productsList)) {
+      const newArr: SelectType[] = productsList.map((el: any) => ({
+        name: el.title,
+        type: el.id,
+      }));
+      setMarketProductsData(newArr);
     }
-    setCoursesData(newArr);
+  }, [productsList]);
+
+
+  useEffect(() => {
+    if (coursesList && Array.isArray(coursesList)) {
+      const newArr: SelectType[] = coursesList.map((el: any) => ({
+        name: el.title,
+        type: el.id,
+      }));
+      setCoursesData(newArr);
+    }
   }, [coursesList]);
+
 
   useEffect(() => {
     if (lessonsList) {
@@ -104,6 +123,35 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
       setLessonsData([]);
     }
   }, [lessonsList]);
+
+  useEffect(() => {
+    if (product) {
+      form.reset({
+        title: product?.title,
+        photo: product?.photo,
+        value: product?.value ? +product?.value : undefined,
+        count: product?.count ? +product?.count : undefined,
+        description: product?.description || '',
+        type: product.type,
+        file: product.file || '',
+        isPartial: product.isPartial || false,
+        courseId: product.courseId || '',
+        productId: product.productId || '',
+        parts: product.parts?.map(p => ({ ...p, value: p.value ? +p.value : undefined })) || [],
+      });
+    } else {
+      form.reset({
+        title: '',
+        photo: '',
+        description: '',
+        file: '',
+        isPartial: false,
+        courseId: '',
+        productId: '',
+        parts: [],
+      });
+    }
+  }, [product, form]);
 
   async function onSubmit(formValues: useFormSchemaType) {
     setState(true);
@@ -125,15 +173,15 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
       // Cleanup optional fields
       if (!payload.count) delete payload.count;
       if (payload.value === undefined || payload.value === '') delete payload.value;
-      if (!payload.courseId) delete payload.courseId;
+
 
       // Handle parts
       if (payload.isPartial && payload.parts) {
         const uploadedParts = await Promise.all(
           payload.parts.map(async (part: any) => {
-            const processedPart = { 
-              title: part.title, 
-              value: Number(part.value) || 0, 
+            const processedPart = {
+              title: part.title,
+              value: Number(part.value) || 0,
               photo: '',
             };
             if (part.photo && part.photo instanceof File) {
@@ -178,7 +226,7 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
 
         // Backend response structure: { data: { id: "..." } }
         const rewardId = product?.id || res?.data?.data?.id || res?.data?.id || res?.id;
-        
+
         console.log("Qayta ishlash uchun Reward ID:", rewardId);
         console.log("To'liq response:", res);
 
@@ -189,7 +237,7 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
           } catch (fileError: any) {
             console.error('Fayl yuklashda xatolik:', fileError);
             alert(`Mukofot yaratildi, lekin fayl yuklashda xato bo'ldi: ${fileError?.response?.data?.message || fileError.message}`);
-            return; 
+            return;
           }
         } else {
           console.error("Reward ID topilmadi. Response:", res);
@@ -215,13 +263,6 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2">
         <div className="flex gap-4 flex-col my-4">
           <TextField name="title" label="Sovg'a nomi" required />
-          <SelectField name="type" data={typeData} placeholder="Sovg'a turini tanlang..." label="Sovg'a turini tanglang" required />
-
-          {loadingCourses ? (
-            <SearchSelectField name="courseId" data={[]} placeholder="Kurslar hali yuklanmagan..." label="Kurslar hali yuklanmagan" />
-          ) : (
-            <SearchSelectField name="courseId" data={coursesData} placeholder="Kursni tanlang..." label="Kursni tanglang" />
-          )}
 
           <FormField
             control={form.control}
@@ -237,6 +278,8 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
               </FormItem>
             )}
           />
+
+          <SelectField name="type" data={typeData} placeholder="Sovg'a turini tanlang..." label="Sovg'a turini tanglang" required />
 
           {isPartial && (
             <div className="flex flex-col gap-4 border p-4 rounded-lg bg-gray-50 dark:bg-gray-900">
@@ -266,14 +309,25 @@ export default function CustomForm({ product, setSheetOpen }: IProps) {
             </>
           )}
 
+          {type === LessonRewardType.PRODUCT && (
+            <SearchSelectField name="productId" data={marketProductsData} label="Market mahsulotini tanlang" placeholder="Mahsulotni qidiring..." required />
+          )}
+
+          {type &&
+            type !== LessonRewardType.AMATEUR_CERTIFICATE &&
+            type !== LessonRewardType.PROGRESSIVE_CERTIFICATE && (
+              <SearchSelectField name="courseId" data={coursesData} label="Kursni tanlang" placeholder="Kursni qidiring..." required />
+            )}
+
           {(type === LessonRewardType.PRODUCT ||
+            type === LessonRewardType.COIN ||
             type === LessonRewardType.AMATEUR_CERTIFICATE ||
             type === LessonRewardType.PROGRESSIVE_CERTIFICATE) && (
             <FileField name={`photo`} label={`Rasm`} />
           )}
 
           {type === LessonRewardType.FILE && (
-            <MediaUploadField name={`file`} label={`Mukofot fayli`} types={['PDF', 'DOC', 'DOCX', 'XLS', 'XLSX', 'xls', 'xlsx', 'ZIP', 'RAR']} />
+            <MediaUploadField name={`file`} label={`Kitob fayli`} types={['PDF', 'DOC', 'DOCX', 'XLS', 'XLSX', 'xls', 'xlsx', 'ZIP', 'RAR']} />
           )}
 
           <TextAreaField name="description" label="Product tarifi" />

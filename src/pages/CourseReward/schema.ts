@@ -22,6 +22,7 @@ export const schema = z.object({
   file: z.union([z.custom<File>((file) => file instanceof File), z.string()]).optional(),
   isPartial: z.boolean().optional(),
   courseId: z.string().optional(),
+  productId: z.string().optional(),
   parts: z.array(
     z.object({
       title: z.string().min(1, { message: 'Nomi talab qilinadi' }),

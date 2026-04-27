@@ -18,7 +18,8 @@ export const getCourse = (item?: Course) => {
     banner: item?.banner ?? '',
     seoKeywords: item?.seoKeywords ?? [''],
     seo: item?.seo ? item?.seo : null,
-    ratingCount: item?.ratingCount ?? 0
+    ratingCount: item?.ratingCount ?? 0,
+    itHasGift: item?.itHasGift ?? false
   };
 };
 

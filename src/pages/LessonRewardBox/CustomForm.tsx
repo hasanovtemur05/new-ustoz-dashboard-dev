@@ -76,9 +76,9 @@ export default function CustomForm({ box, setSheetOpen, courseId }: IProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <TextField name="title" label="Sarlavha" required />
         <SearchSelectField name="courseId" data={courseData} label="Kurs" placeholder="Kursni tanlang" required />
         <SearchSelectField name="lessonId" data={lessonData} label="Dars" placeholder="Darsni tanlang" required />
-        <TextField name="title" label="Sarlavha" required />
         <FileField name="image" label="Rasm" required />
         <TextAreaField name="description" label="Tavsif" />
         <LoadingButton isLoading={isCreating || isEditing}>

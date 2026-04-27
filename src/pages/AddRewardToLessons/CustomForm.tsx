@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from 'components/ui/form';
-import { SelectField } from 'components/fields';
+import { SelectField, SearchSelectField } from 'components/fields';
 import LoadingButton from 'components/LoadingButton';
 import { useCoursesList } from 'modules/courses/hooks/useCoursesList';
 import { useEffect, useState } from 'react';
@@ -141,16 +141,16 @@ export default function CustomForm({ selectedData, setSheetOpen }: IProps) {
         <div className="flex gap-4 flex-col my-4">
           {/* Kurs tanlash */}
           {loadingCourses ? (
-            <SelectField name="courseId" data={[]} placeholder="Kurslar yuklanmoqda..." label="Kursni tanlang" />
+            <SearchSelectField name="courseId" data={[]} placeholder="Kurslar yuklanmoqda..." label="Kursni tanlang" />
           ) : (
-            <SelectField name="courseId" data={coursesData} placeholder="Kursni tanlang..." label="Kursni tanlang" />
+            <SearchSelectField name="courseId" data={coursesData} placeholder="Kursni tanlang..." label="Kursni tanlang" />
           )}
 
           {/* Dars tanlash */}
           {loadingLessons ? (
-            <SelectField name="lessonId" data={[]} placeholder="Darslar yuklanmoqda..." label="Darsni tanlang" />
+            <SearchSelectField name="lessonId" data={[]} placeholder="Darslar yuklanmoqda..." label="Darsni tanlang" />
           ) : (
-            <SelectField
+            <SearchSelectField
               name="lessonId"
               data={lessonsData}
               placeholder={!lessonsData?.length ? 'Darslar yoq' : selectedCourseId ? 'Darsni tanlang...' : 'Avval kursni tanlang'}
@@ -160,9 +160,9 @@ export default function CustomForm({ selectedData, setSheetOpen }: IProps) {
 
           {/* Mukofot ID tanlash */}
           {loadingRewards ? (
-            <SelectField name="rewardId" data={[]} placeholder="Mukofotlar yuklanmoqda..." label="Mukofot " />
+            <SearchSelectField name="rewardId" data={[]} placeholder="Mukofotlar yuklanmoqda..." label="Mukofot " />
           ) : (
-            <SelectField name="rewardId" data={rewardsData} placeholder="Mukofotni tanlang..." label="Mukofot " />
+            <SearchSelectField name="rewardId" data={rewardsData} placeholder="Mukofotni tanlang..." label="Mukofot " />
           )}
 
           {/* Qism tanlash (faqat qisman sovg'alar uchun) */}

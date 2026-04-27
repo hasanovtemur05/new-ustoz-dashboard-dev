@@ -72,50 +72,93 @@ export default function ItemsForm({ box }: IProps) {
   return (
     <div className="flex flex-col gap-6">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-end gap-2 border p-4 rounded-lg bg-gray-50 dark:bg-gray-900">
-          <div className="flex-1 flex gap-2">
-            <SearchSelectField name="rewardId" data={rewardData} label="Mukofot" placeholder="Tanlang" required />
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center gap-3 p-3 border rounded-xl bg-slate-50/50 dark:bg-slate-900/50 shadow-sm">
+          <div className="flex-1 grid grid-cols-12 gap-3 items-end">
+            <div className={cn("col-span-12", partData.length > 0 ? "sm:col-span-7" : "sm:col-span-12")}>
+              <SearchSelectField name="rewardId" data={rewardData} label="Sovg'a" placeholder="Sovg'ani tanlang" required />
+            </div>
             {partData.length > 0 && (
-              <SelectField name="partId" data={partData} label="Qism" placeholder="Tanlang" />
+              <div className="col-span-12 sm:col-span-5">
+                <SelectField name="partId" data={partData} label="Qism" placeholder="Tanlang" />
+              </div>
             )}
           </div>
-          <LoadingButton isLoading={isAdding} className="mb-2">Qo'shish</LoadingButton>
+          <Button type="submit" disabled={isAdding} className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200 dark:shadow-none mt-5">
+            {isAdding ? '...' : 'Qo\'shish'}
+          </Button>
         </form>
       </Form>
 
-      <div className="flex flex-col gap-2">
-        <h3 className="font-semibold">Amaldagi mukofotlar ({box.items.length})</h3>
-        <div className="flex flex-col gap-2">
-          {box.items.map((item) => (
-            <div key={item.id} className="flex items-center justify-between p-3 border rounded-lg bg-white dark:bg-gray-800">
-              <div className="flex items-center gap-3">
-                <img src={getMediaUrl(item.rewardPhoto)} alt={item.rewardTitle} className="w-14 h-12 rounded object-cover border" />
-                <div>
-                  <p className="font-medium">{item.rewardTitle}</p>
-                  <div className="mt-1">
-                    <Badge variant="outline" className={cn("text-[10px] font-medium py-0 h-5", typeMap[item.rewardType as any]?.className)}>
-                      {typeMap[item.rewardType as any]?.label || item.rewardType}
-                    </Badge>
-                  </div>
-                </div>
-              </div>
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between px-1">
+          <h3 className="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+            Amaldagi mukofotlar 
+            <span className="inline-flex items-center justify-center bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 text-xs font-bold px-2 py-0.5 rounded-full">
+              {box.items.length}
+            </span>
+          </h3>
+        </div>
 
-              <div className="flex items-center gap-2">
-                {item.rewardType?.toUpperCase() === 'PROMOCODE' && (
-                  <span className="text-[10px] text-muted-foreground mr-1">
-                    Soni: {promocodeCounts?.find((r: any) => r.rewardId === item.rewardId)?.count || 0}
-                  </span>
-                )}
-
-                <Button variant="ghost" size="icon" onClick={() => deleteItem(item.id)} className="text-red-500">
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          ))}
-          {box.items.length === 0 && (
-            <p className="text-gray-500 text-sm text-center py-4 italic">Box hozircha bo'sh</p>
-          )}
+        <div className="border rounded-xl overflow-hidden bg-white dark:bg-slate-900/20 shadow-sm">
+          <table className="w-full text-sm text-left border-collapse">
+            <thead>
+              <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                <th className="px-4 py-3 font-semibold text-slate-600 dark:text-slate-400 w-12 text-center">№</th>
+                <th className="px-4 py-3 font-semibold text-slate-600 dark:text-slate-400">Sovg'a nomi</th>
+                <th className="px-4 py-3 font-semibold text-slate-600 dark:text-slate-400 w-16 text-center"></th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
+              {box.items.map((item, index) => (
+                <tr key={item.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors group">
+                  <td className="px-4 py-3 text-slate-400 font-medium text-center">{index + 1}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-col gap-0.5">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-slate-700 dark:text-slate-200">{item.rewardTitle}</span>
+                        {item.partId && (() => {
+                          const reward = rewards?.find((r: any) => r.id === item.rewardId);
+                          const part = reward?.parts?.find((p: any) => p.id === item.partId);
+                          return part ? (
+                            <Badge variant="secondary" className="bg-slate-100 text-slate-600 text-[10px] h-5 px-1.5 font-bold uppercase border-slate-200">
+                              {part.title}
+                            </Badge>
+                          ) : null;
+                        })()}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={cn("text-[10px] uppercase tracking-wider font-bold", typeMap[item.rewardType as any]?.className.split(' ').find(c => c.startsWith('text-')))}>
+                          {typeMap[item.rewardType as any]?.label || item.rewardType}
+                        </span>
+                        {item.rewardType?.toUpperCase() === 'PROMOCODE' && (
+                          <span className="text-[10px] text-slate-400 font-medium bg-slate-100 dark:bg-slate-800 px-1.5 rounded">
+                            Zaxira: {promocodeCounts?.find((r: any) => r.rewardId === item.rewardId)?.count || 0}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => deleteItem(item.id)} 
+                      className="h-8 w-8 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+              {box.items.length === 0 && (
+                <tr>
+                  <td colSpan={3} className="px-4 py-10 text-center text-slate-400 italic">
+                    Hozircha mukofotlar biriktirilmagan
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

@@ -76,8 +76,8 @@ export default function SearchSelectField({
                 </Button>
               </FormControl>
             </PopoverTrigger>
-            <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
-              <div className="flex items-center border-b px-3">
+            <PopoverContent className="w-[--radix-popover-trigger-width] p-0 flex flex-col max-h-[300px] overflow-hidden" align="start">
+              <div className="flex items-center border-b px-3 shrink-0">
                 <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
                 <Input
                   placeholder="Qidirish..."
@@ -86,7 +86,10 @@ export default function SearchSelectField({
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              <div className="max-h-[300px] overflow-y-auto p-1">
+              <div 
+                className="flex-1 overflow-y-auto overflow-x-hidden p-1 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800 pointer-events-auto overscroll-contain"
+                onWheel={(e) => e.stopPropagation()}
+              >
                 {filteredData.length === 0 ? (
                   <div className="py-6 text-center text-sm text-slate-500">Ma'lumot topilmadi.</div>
                 ) : (

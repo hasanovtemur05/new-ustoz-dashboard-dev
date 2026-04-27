@@ -8,6 +8,11 @@ export const getData = (item?: ICourseReward) => {
     rewardId: item?.rewardId ?? '',
     lessonId: item?.lessonId ?? '',
     partId: item?.partId ?? '',
+    rewardType: item?.rewardType ?? '',
+    rewardPhoto: item?.rewardPhoto ?? '',
+    isPartial: item?.isPartial ?? false,
+    partNumber: item?.partNumber ?? 0,
+    totalParts: item?.totalParts ?? 0,
   };
 };
 

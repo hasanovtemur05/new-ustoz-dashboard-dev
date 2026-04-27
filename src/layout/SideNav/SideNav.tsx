@@ -61,9 +61,7 @@ const routePermissions: { [key: string]: UserRole[] } = {
   '/meeting': [UserRole.SUPER_ADMIN],
   '/fortuna-product': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN],
   '/fortuna-promocode': [UserRole.SUPER_ADMIN],
-  '/lesson-reward': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
-  '/add-reward-to-lessons': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
-  '/lesson-reward-box': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
+  '/course-rewards-tabs': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/survey': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/call-center': [UserRole.CALL_CENTER],
   '/influencer': [UserRole.SUPER_ADMIN, UserRole.TOP_30_ADMIN],
@@ -204,9 +202,7 @@ const SideNav = ({ isSideNavOpen }: IProps) => {
       icon: Gift,
       items: [
         { title: "Baraban sovg'alari", link: '/fortuna-product' },
-        { title: "Darslar sovg'alari", link: '/lesson-reward' },
-        { title: "Darslarga sovg'a qo'shish", link: '/add-reward-to-lessons' },
-        { title: "Darslar Boxi (Yangi)", link: '/lesson-reward-box' },
+        { title: "Dars sovg'alari", link: '/course-rewards-tabs' },
       ]
     },
     {

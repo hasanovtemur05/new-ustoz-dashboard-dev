@@ -4,8 +4,13 @@ export interface ICourseReward {
   orderId: number;
   reward: string;
   rewardId: string;
+  rewardType?: string;
+  rewardPhoto?: string;
   lessonId: string;
   partId?: string;
+  isPartial?: boolean;
+  partNumber?: number;
+  totalParts?: number;
 }
 
 export interface ICourseRewardInput {

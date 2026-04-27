@@ -10,18 +10,26 @@ import { useParams } from 'react-router-dom';
 import { LessonReward } from 'modules/course-reward-product/types';
 import { useLessonRewardList } from 'modules/course-reward-product/hooks/useList';
 import { useDeleteLessonReward } from 'modules/course-reward-product/hooks/useDelete';
+import { useSearchParams } from 'react-router-dom';
 
 const LessonRewardPage = () => {
+  const [searchParams] = useSearchParams();
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isSheetOpen, setSheetOpen] = useState(false);
   const [data, setData] = useState<LessonReward>();
-  // const { categoryId } = useParams();
-  const { data: rewards, isLoading } = useLessonRewardList({ pageSize: 20 });
+  const selectedCourseId = searchParams.get('courseId') || '';
+  
+  // Templates are global library items
+  const { data: rewards, isLoading } = useLessonRewardList({ pageSize: 100 } as any);
+  
   const { triggerInfoDelete } = useDeleteLessonReward(data?.id!);
 
   const getRowData = (info: LessonReward) => {
     setData(info);
   };
+
+  // Templates are global, no need to filter by courseId here
+  const filteredRewards = rewards || [];
 
   // demo
   const columns = createDataColumns({
@@ -32,11 +40,16 @@ const LessonRewardPage = () => {
 
 
   return (
-    <div>
-      <TableActions sheetTriggerTitle="Darslar uchun sovg'a qo'shish" sheetTitle="Yangi sovg'a qo'shish" TableForm={CustomForm} />
-      {isLoading ? <Loader /> : <DataTable columns={columns} data={rewards} />}
+    <div className="flex flex-col gap-4">
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="font-bold text-2xl whitespace-nowrap text-slate-800 dark:text-slate-100">
+          Sovg'alar shabloni
+        </h2>
+      </div>
+      <TableActions sheetTriggerTitle="Yangi shablon qo'shish" sheetTitle="Sovg'a shabloni yaratish" TableForm={CustomForm} />
+      {isLoading ? <Loader /> : <DataTable columns={columns} data={filteredRewards} />}
 
-      <Sheet sheetTitle="Darslar uchun  sovg'ani tahrirlash" isOpen={isSheetOpen} setSheetOpen={setSheetOpen}>
+      <Sheet sheetTitle="Sovg'a shablonini tahrirlash" isOpen={isSheetOpen} setSheetOpen={setSheetOpen}>
         <CustomForm product={data} setSheetOpen={setSheetOpen} />
       </Sheet>
       <AlertDialog

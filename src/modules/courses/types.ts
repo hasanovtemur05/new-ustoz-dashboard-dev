@@ -24,6 +24,7 @@ export interface Course {
   teacherId: string;
   ratingCount: number;
   seoKeywords: string | string[];
+  itHasGift?: boolean;
 }
 
 export interface CourseInput {
