@@ -3,20 +3,24 @@ import { Button } from 'components/ui/button';
 import { Check, X } from 'lucide-react';
 import { format } from 'date-fns';
 
+import { getMediaUrl } from 'utils/common';
+
 interface ColumnsProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
+  pageNumber: number;
+  pageSize: number;
 }
 
 const getInitials = (firstName: string, lastName: string) => {
   return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase() || '?';
 };
 
-export const createVerificationColumns = ({ onApprove, onReject }: ColumnsProps): ColumnDef<any>[] => [
+export const createVerificationColumns = ({ onApprove, onReject, pageNumber, pageSize }: ColumnsProps): ColumnDef<any>[] => [
   {
     accessorKey: 'id',
     header: 'T/r',
-    cell: ({ row }) => <div className="w-10">{row.index + 1}</div>,
+    cell: ({ row }) => <div className="w-10">{(pageNumber - 1) * pageSize + row.index + 1}</div>,
   },
   {
     id: 'photo',
@@ -31,7 +35,7 @@ export const createVerificationColumns = ({ onApprove, onReject }: ColumnsProps)
       return (
         <div className="size-8 rounded-full bg-secondary flex items-center justify-center overflow-hidden flex-shrink-0">
           {user?.photo ? (
-            <img src={user.photo} alt={fullName} className="size-full object-cover" />
+            <img src={getMediaUrl(user.photo)} alt={fullName} className="size-full object-cover" />
           ) : (
             <span className="text-xs font-bold text-muted-foreground">{initials}</span>
           )}

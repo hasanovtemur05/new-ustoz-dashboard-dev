@@ -22,7 +22,8 @@ import {
   BookType,
   Gamepad2,
   MessageSquare,
-  PartyPopper
+  PartyPopper,
+  Image
 } from 'lucide-react';
 import { Button } from 'components/ui/button';
 import { cn } from 'utils/styleUtils';
@@ -41,13 +42,14 @@ const routePermissions: { [key: string]: UserRole[] } = {
   '/books': [UserRole.SUPER_ADMIN],
   '/course-assistants': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/news': [UserRole.SUPER_ADMIN, UserRole.NOTIFICATION_ADMIN],
-  '/verification': [UserRole.SUPER_ADMIN],
+  '/verification': [UserRole.SUPER_ADMIN, UserRole.SPECIAL],
   '/puzzles': [UserRole.SUPER_ADMIN],
   '/notifications': [UserRole.SUPER_ADMIN, UserRole.NOTIFICATION_ADMIN],
   '/info': [UserRole.SUPER_ADMIN],
   '/certificate': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/story': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN, UserRole.NOTIFICATION_ADMIN],    /////////
   '/banner': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN, UserRole.NOTIFICATION_ADMIN],   /////////
+  '/banner-photo': [UserRole.SUPER_ADMIN],
   '/category': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN],
   '/donation': [UserRole.SUPER_ADMIN],
   '/premium-plan': [UserRole.SUPER_ADMIN],
@@ -143,6 +145,11 @@ const SideNav = ({ isSideNavOpen }: IProps) => {
       title: 'Bannerlar',
       icon: NotebookPen,
       link: '/banner',
+    },
+    {
+      title: 'Banner Photo',
+      icon: Image,
+      link: '/banner-photo',
     },
     {
       title: `Web o'yinlar`,

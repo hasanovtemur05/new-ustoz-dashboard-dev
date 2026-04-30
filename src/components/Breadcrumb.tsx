@@ -95,10 +95,10 @@ function Breadcrumbs({ text }: { text: string }) {
   const { userData } = useContext(UserContext);
   
   // ✅ CALL_CENTER uchun bosh sahifani yashirish
-  const isCallCenter = userData?.role === UserRole.CALL_CENTER;
+  const isRestrictedRole = userData?.role === UserRole.CALL_CENTER || userData?.role === UserRole.SPECIAL;
   const isHomePage = resolvedLocation.pathname === '/';
   
-  if (isCallCenter && isHomePage) {
+  if (isRestrictedRole && isHomePage) {
     return <Outlet />;
   }
 

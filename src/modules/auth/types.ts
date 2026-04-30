@@ -29,6 +29,7 @@ export enum UserRole {
   STATISTICS_ADMIN = 'STATISTICS_ADMIN',
   CALL_CENTER = 'CALL_CENTER',
   TOP_30_ADMIN = 'TOP_30_ADMIN',
+  SPECIAL = 'SPECIAL',
 }
 
 export interface IAuthData {

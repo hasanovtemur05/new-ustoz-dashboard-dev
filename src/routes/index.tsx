@@ -54,6 +54,7 @@ import LessonRewardBoxPage from 'pages/LessonRewardBox/Page';
 import SuggestionDepartmentPage from 'pages/SuggestionDepartment/Page';
 import HolidaysPage from 'pages/Holidays/Page';
 import CourseRewardsTabsPage from 'pages/CourseRewardsTabs/Page';
+import BannerPhotoPage from 'pages/BannerPhoto/Page';
 
 const routePermissions: { [key: string]: UserRole[] } = {
   '/': [UserRole.SUPER_ADMIN, UserRole.STATISTICS_ADMIN],
@@ -68,13 +69,14 @@ const routePermissions: { [key: string]: UserRole[] } = {
   '/courses/:courseId/influencer': [UserRole.SUPER_ADMIN, UserRole.TOP_30_ADMIN],
   '/courses/:courseId/:moduleId/:lessonId': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/news': [UserRole.SUPER_ADMIN, UserRole.NOTIFICATION_ADMIN],
-  '/verification': [UserRole.SUPER_ADMIN],
+  '/verification': [UserRole.SUPER_ADMIN, UserRole.SPECIAL],
   '/puzzles': [UserRole.SUPER_ADMIN],
   '/notifications': [UserRole.SUPER_ADMIN, UserRole.NOTIFICATION_ADMIN],
   '/info': [UserRole.SUPER_ADMIN],
   '/certificate': [UserRole.SUPER_ADMIN, UserRole.COURSE_ADMIN],
   '/story': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN, UserRole.NOTIFICATION_ADMIN],
   '/banner': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN, UserRole.NOTIFICATION_ADMIN],
+  '/banner-photo': [UserRole.SUPER_ADMIN],
   '/category': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN],
   '/category/:categoryId': [UserRole.SUPER_ADMIN, UserRole.SHOP_ADMIN],
   '/donation': [UserRole.SUPER_ADMIN],
@@ -120,6 +122,7 @@ const routes = [
   { path: '/certificate', element: <Certificate /> },
   { path: '/story', element: <StoryV2Page /> },
   { path: '/banner', element: <BannerPage /> },
+  { path: '/banner-photo', element: <BannerPhotoPage /> },
   { path: '/category', element: <CategoryPage /> },
   { path: '/category/:categoryId', element: <ProductPage /> },
   { path: '/donation', element: <DonationPage /> },
@@ -152,6 +155,10 @@ const HomeRedirect = () => {
   
   if (userData?.role === UserRole.CALL_CENTER) {
     return <Navigate to="/call-center" replace />;
+  }
+
+  if (userData?.role === UserRole.SPECIAL) {
+    return <Navigate to="/verification" replace />;
   }
   
   return <HomePage />;

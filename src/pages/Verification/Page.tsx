@@ -4,6 +4,7 @@ import { useApproveVerification, useRejectVerification } from 'modules/verificat
 import { DataTable } from 'components/DataTable';
 import Loader from 'components/Loader';
 import { Sheet } from 'components/Sheet';
+import { Pagination } from 'components/Pagination';
 import { createVerificationColumns } from './Column';
 import CustomForm from './CustomForm';
 import { VerificationFormValues } from './schema';
@@ -11,8 +12,9 @@ import { VerificationFormValues } from './schema';
 const VerificationPage = () => {
   const [isSheetOpen, setSheetOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: list, isLoading } = useVerificationList({});
+  const { list, paginationInfo, isLoading } = useVerificationList({ pageNumber: currentPage, pageSize: 10 });
   const { mutate: approve } = useApproveVerification();
   const { mutate: reject, isPending: isRejecting } = useRejectVerification();
 
@@ -41,6 +43,8 @@ const VerificationPage = () => {
   const columns = createVerificationColumns({
     onApprove: handleApprove,
     onReject: handleRejectClick,
+    pageNumber: currentPage,
+    pageSize: 10,
   });
 
   return (
@@ -49,7 +53,15 @@ const VerificationPage = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <DataTable columns={columns} data={list || []} />
+        <div className="flex flex-col gap-4">
+          <DataTable columns={columns} data={list || []} />
+          <Pagination
+            className="justify-end"
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            paginationInfo={paginationInfo || { count: 0, pageNumber: 1, pageSize: 10, pageCount: 0 }}
+          />
+        </div>
       )}
 
       <Sheet
