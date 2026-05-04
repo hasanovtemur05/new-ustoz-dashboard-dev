@@ -1,6 +1,6 @@
 export enum MeetingType {
   ONLINE = 'ONLINE',
-  OFFLINE = 'OFFLINE ',
+  OFFLINE = 'OFFLINE',
   EMPTY = '',
 }
 export interface IMeeting {
